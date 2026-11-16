@@ -1,0 +1,131 @@
+package id.sch.man3merangin.ujian.data.net
+
+import id.sch.man3merangin.ujian.data.crypto.Envelope
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.IOException
+import java.util.concurrent.TimeUnit
+
+class HttpExamApi(
+    private val baseUrl: String,
+    private val sessionProvider: () -> String?,
+    private val deviceIdProvider: () -> String,
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
+        .build()
+) : ExamApi {
+    private val json = Json { ignoreUnknownKeys = true }
+    private val jsonMediaType = "application/json; charset=utf-8".toMediaType()
+
+    private fun requestBuilder(path: String): Request.Builder {
+        val url = if (baseUrl.endsWith("/")) "$baseUrl$path" else "$baseUrl/$path"
+        val builder = Request.Builder().url(url)
+        sessionProvider()?.let { token ->
+            builder.addHeader("Authorization", "Bearer $token")
+        }
+        builder.addHeader("X-Device-Id", deviceIdProvider())
+        return builder
+    }
+
+    private fun handleResponse(response: okhttp3.Response): String {
+        val code = response.code
+        val bodyString = response.body?.string().orEmpty()
+        if (code == 409) {
+            throw DeviceMismatchException()
+        }
+        if (!response.isSuccessful) {
+            throw ApiException(code, "Server returned error: $code - $bodyString")
+        }
+        return bodyString
+    }
+
+    @Serializable
+    private data class LoginRequest(val nisn: String, val password: String)
+
+    override suspend fun login(nisn: String, password: String): LoginResult {
+        val reqBody = json.encodeToString(LoginRequest(nisn, password)).toRequestBody(jsonMediaType)
+        val request = requestBuilder("auth/login").post(reqBody).build()
+        client.newCall(request).execute().use { response ->
+            val body = handleResponse(response)
+            return json.decodeFromString<LoginResult>(body)
+        }
+    }
+
+    override suspend fun listExams(): List<ExamSummary> {
+        val request = requestBuilder("exams").get().build()
+        client.newCall(request).execute().use { response ->
+            val body = handleResponse(response)
+            return json.decodeFromString<List<ExamSummary>>(body)
+        }
+    }
+
+    override suspend fun downloadPackage(examId: String): Envelope {
+        val request = requestBuilder("exams/$examId/package").get().build()
+        client.newCall(request).execute().use { response ->
+            val body = handleResponse(response)
+            return json.decodeFromString<Envelope>(body)
+        }
+    }
+
+    @Serializable
+    private data class SyncBatchRequest(val batch: List<SyncItem>)
+
+    override suspend fun sync(batch: List<SyncItem>): SyncResult {
+        val reqBody = json.encodeToString(SyncBatchRequest(batch)).toRequestBody(jsonMediaType)
+        val request = requestBuilder("sync").post(reqBody).build()
+        client.newCall(request).execute().use { response ->
+            val body = handleResponse(response)
+            return json.decodeFromString<SyncResult>(body)
+        }
+    }
+
+    @Serializable
+    private data class TimeResponse(val timeMs: Long)
+
+    override suspend fun serverTime(): Long {
+        val request = requestBuilder("time").get().build()
+        client.newCall(request).execute().use { response ->
+            val body = handleResponse(response)
+            return json.decodeFromString<TimeResponse>(body).timeMs
+        }
+    }
+
+    @Serializable
+    private data class ReadyRequest(val version: Int)
+
+    override suspend fun ready(examId: String, version: Int) {
+        val reqBody = json.encodeToString(ReadyRequest(version)).toRequestBody(jsonMediaType)
+        val request = requestBuilder("exams/$examId/ready").post(reqBody).build()
+        client.newCall(request).execute().use { response ->
+            handleResponse(response)
+        }
+    }
+
+    @Serializable
+    private data class HeartbeatRequest(val answeredCount: Int)
+    @Serializable
+    private data class HeartbeatResponse(val serverNowMs: Long)
+
+    override suspend fun heartbeat(examId: String, answeredCount: Int): Long {
+        val reqBody = json.encodeToString(HeartbeatRequest(answeredCount)).toRequestBody(jsonMediaType)
+        val request = requestBuilder("exams/$examId/heartbeat").post(reqBody).build()
+        client.newCall(request).execute().use { response ->
+            val body = handleResponse(response)
+            return json.decodeFromString<HeartbeatResponse>(body).serverNowMs
+        }
+    }
+
+    override suspend fun myAnswers(examId: String): RemoteAnswers {
+        val request = requestBuilder("exams/$examId/my-answers").get().build()
+        client.newCall(request).execute().use { response ->
+            val body = handleResponse(response)
+            return json.decodeFromString<RemoteAnswers>(body)
+        }
+    }
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.sch.man3merangin.ujian.time.TrustedClockTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-15T20:33:13.736Z" hostname="ANDIKA-LOQ" time="0.003">
+  <properties/>
+  <testcase name="nowAdvancesWithElapsedNotWallClock" classname="id.sch.man3merangin.ujian.time.TrustedClockTest" time="0.001"/>
+  <testcase name="rebootResetsToNotSynced" classname="id.sch.man3merangin.ujian.time.TrustedClockTest" time="0.001"/>
+  <testcase name="windowOpenBetweenStartAndEnd" classname="id.sch.man3merangin.ujian.time.TrustedClockTest" time="0.001"/>
+  <testcase name="neverSyncedGivesNotSynced" classname="id.sch.man3merangin.ujian.time.TrustedClockTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

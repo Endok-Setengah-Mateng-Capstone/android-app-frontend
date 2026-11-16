@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-primary": "#ffffff", "secondary-fixed": "#dbe1ff", "on-surface-variant": "#44474e", "on-background": "#0b1c30", "outline-variant": "#c5c6cf", "tertiary-fixed": "#6ffbbe", "on-error-container": "#93000a", "error": "#ba1a1a", "inverse-primary": "#b4c7ef", "secondary-container": "#316bf3", "inverse-on-surface": "#eaf1ff", "on-tertiary-fixed": "#002113", "primary-container": "#0f2444", "on-tertiary": "#ffffff", "surface-bright": "#f8f9ff", "surface-container": "#e5eeff", "surface-container-lowest": "#ffffff", "on-secondary-fixed": "#00174b", "on-primary-fixed-variant": "#344769", "primary-fixed-dim": "#b4c7ef", "secondary": "#0051d5", "on-secondary-container": "#fefcff", "tertiary-container": "#002b1b", "surface-container-low": "#eff4ff", "outline": "#75777f", "primary-fixed": "#d7e3ff", "surface-container-high": "#dce9ff", "surface": "#f8f9ff", "on-surface": "#0b1c30", "error-container": "#ffdad6", "background": "#f8f9ff", "surface-container-highest": "#d3e4fe", "inverse-surface": "#213145", "tertiary": "#00130a", "primary": "#000e27", "surface-variant": "#d3e4fe", "on-secondary-fixed-variant": "#003ea8", "on-error": "#ffffff", "on-secondary": "#ffffff", "secondary-fixed-dim": "#b4c5ff", "tertiary-fixed-dim": "#4edea3", "on-primary-fixed": "#041b3b", "surface-dim": "#cbdbf5", "on-tertiary-container": "#009f6e", "on-primary-container": "#798cb1", "surface-tint": "#4c5f82", "on-tertiary-fixed-variant": "#005236" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-sm": "0.5rem", "space-md": "1rem", "margin": "1.5rem", "gutter": "1rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "gutter-mobile": "0.75rem", "space-xl": "2rem", "margin-mobile": "1rem" }, fontFamily: { "body-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"] }, fontSize: { "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }], "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "700" }], "body-lg": ["17px", { lineHeight: "28px", fontWeight: "400" }], "label-lg": ["15px", { lineHeight: "20px", fontWeight: "600" }], "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }], "label-md": ["13px", { lineHeight: "18px", fontWeight: "600" }], "headline-md": ["22px", { lineHeight: "28px", fontWeight: "600" }], "body-sm": ["13px", { lineHeight: "20px", fontWeight: "400" }], "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }], "label-sm": ["11px", { lineHeight: "16px", fontWeight: "600" }] } } } }</script><style>@layer base{html,body{width:100vw;min-height:100vh;margin:0;padding:0;}body{overscroll-behavior:none;font-family:'Plus Jakarta Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-primary-container text-on-primary select-none"><div class="h-6 px-margin-mobile flex items-center justify-between bg-primary text-on-primary-container text-label-sm font-label-sm tracking-tight"><span class="font-label-sm text-label-sm text-on-primary">07:30</span><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px]">network_wifi</span><span class="material-symbols-outlined text-[14px]">signal_cellular_4_bar</span><div class="flex items-center gap-1"><span class="font-label-sm text-[10px]">98%</span><span class="material-symbols-outlined text-[15px]">battery_charging_full</span></div></div></div><div class="h-20 px-margin-mobile flex items-center justify-between shadow-[0_4px_12px_-2px_rgba(15,36,68,0.25)]"><div class="flex items-center gap-space-sm"><img alt="Logo Ujian Digital MAN 3 Merangin" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrAs0FFi8SdOB1WKPAvcpdiNLrdSzexnD0GUNbqnAyvZrroKnfFfzzk1dxHCOJ_E37hgaPk1w657EkQ9mQlzStiR2bX2AqkvhG08N9T213MopajNTNNO8ZQddpkOtUieNJS3foP41S81Tcqi6oUKw-ETTQEj9UGaRHlYH53vlQk8-AkPbVxtVFDppNInME4jwDRYRm4q9fnZAxmEHXYl-jHf1jtybANHA6rsBE31_LvN"/><div class="flex flex-col"><div class="flex items-center gap-1.5"><span class="font-label-md text-label-md text-on-primary tracking-wide uppercase">MAN 3 MERANGIN</span><span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-label-sm bg-tertiary-fixed/20 text-tertiary-fixed">CBT</span></div><h1 class="font-headline-sm text-headline-sm text-primary-fixed leading-tight">Lembar Soal Ujian</h1></div></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-1.5 bg-surface-container-lowest/10 px-space-sm py-1 rounded-full text-on-primary text-label-sm font-label-sm"><span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span><span class="text-[11px] text-primary-fixed">Tersinkron</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col flex-1 relative w-full pt-20 pb-safe bg-surface"><div class="flex flex-col w-full relative min-w-0 select-none pb-12">
+<!-- Latar Belakang: Tampilan Lembar Soal Aktif yang Sedang Diredupkan (Dimmed Context) -->
+<div class="w-full px-margin-mobile pt-space-sm space-y-space-md opacity-30 filter blur-[0.5px] pointer-events-none aria-hidden:true">
+<!-- Timer & Indikator Soal di Balik Layar -->
+<div class="flex items-center justify-between bg-surface-container p-space-md rounded-xl shadow-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[22px]">timer</span>
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Sisa Waktu</span>
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">00:48:15</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md">
+<span>Soal No. 14</span>
+</div>
+</div>
+<!-- Pratinjau Naskah Soal Latar Belakang -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-md">
+<div class="flex justify-between items-center">
+<span class="px-2.5 py-1 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase">Pilihan Ganda</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Bobot: 2.5</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+        Dalam perspektif fikih lingkungan (Fiqh al-Bi’ah), eksploitasi berlebihan terhadap ekosistem hutan gambut di Jambi yang memicu kebakaran hutan termasuk perbuatan...
+      </p>
+<div class="space-y-space-sm pt-space-xs">
+<div class="p-space-md rounded-xl bg-surface-container-low text-on-surface flex items-center gap-3">
+<span class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center font-label-md text-label-md">A</span>
+<span class="font-body-md text-body-md">Mubah lil maslahah</span>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-high text-on-surface flex items-center gap-3">
+<span class="w-7 h-7 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-label-md text-label-md">B</span>
+<span class="font-body-md text-body-md">Fasad fil-ardh yang dilarang syariat</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Backdrop Gelap Scrim -->
+<div class="fixed inset-0 top-20 bg-primary/45 backdrop-blur-[2px] z-40 transition-opacity duration-300" id="drawer-scrim"></div>
+<!-- Modal Bottom Sheet / Drawer Navigasi Cepat (Terbuka Aktif) -->
+<div class="fixed inset-x-0 bottom-0 z-50 flex flex-col max-h-[777px] bg-surface-container-lowest rounded-t-[28px] shadow-2xl transition-transform duration-300 transform translate-y-0" id="navigation-drawer">
+<!-- Drag Handle & Header Drawer -->
+<div class="px-margin-mobile pt-3 pb-space-sm flex flex-col items-center bg-surface-container-lowest rounded-t-[28px]">
+<div class="w-12 h-1.5 rounded-full bg-outline-variant mb-3"></div>
+<div class="w-full flex items-start justify-between gap-space-sm">
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">Daftar Nomor Soal</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate mt-0.5">
+            Ujian: Biologi &amp; Fikih Lingkungan (40 Soal)
+          </p>
+</div>
+<button aria-label="Tutup Lembar Navigasi" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant active:scale-95 transition-transform" id="close-drawer-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+</div>
+<!-- Ringkasan Statistik Cepat (Status Pengerjaan) -->
+<div class="px-margin-mobile py-2.5 bg-surface-container-low">
+<div class="grid grid-cols-3 gap-2">
+<!-- Sudah Dijawab -->
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-lowest shadow-sm">
+<div class="w-7 h-7 rounded-full bg-primary-container text-tertiary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+</div>
+<div class="min-w-0">
+<span class="block font-headline-sm text-headline-sm text-on-surface leading-none">28</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant truncate mt-0.5">Terjawab</span>
+</div>
+</div>
+<!-- Ragu-ragu -->
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-lowest shadow-sm">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest text-[#b45309] flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">flag</span>
+</div>
+<div class="min-w-0">
+<span class="block font-headline-sm text-headline-sm text-on-surface leading-none">2</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant truncate mt-0.5">Ragu-ragu</span>
+</div>
+</div>
+<!-- Belum Dijawab -->
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-lowest shadow-sm">
+<div class="w-7 h-7 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
+</div>
+<div class="min-w-0">
+<span class="block font-headline-sm text-headline-sm text-on-surface leading-none">10</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant truncate mt-0.5">Kosong</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Area Gulir Grid Nomor Soal (Scrollable Matrix) -->
+<div class="flex-1 overflow-y-auto px-margin-mobile py-space-md overscroll-contain">
+<!-- Grid 5 Kolom x 8 Baris (40 Nomor Soal) -->
+<div class="grid grid-cols-5 gap-2.5 pb-2" id="question-matrix">
+<!-- Baris 1: Soal 1-5 (Semua Terjawab) -->
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="1" type="button">
+<span>1</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="2" type="button">
+<span>2</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="3" type="button">
+<span>3</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="4" type="button">
+<span>4</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="5" type="button">
+<span>5</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<!-- Baris 2: Soal 6-10 (Termasuk 7 Ragu-ragu) -->
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="6" type="button">
+<span>6</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<!-- Soal 7: RAGU-RAGU -->
+<button class="soal-btn relative h-12 rounded-xl bg-[#fef3c7] text-[#92400e] font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="7" type="button">
+<span class="font-bold">7</span>
+<span class="material-symbols-outlined text-[13px] text-[#d97706] leading-none mt-0.5" style="font-variation-settings: 'FILL' 1;">flag</span>
+<span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#f59e0b]"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="8" type="button">
+<span>8</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="9" type="button">
+<span>9</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="10" type="button">
+<span>10</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<!-- Baris 3: Soal 11-15 (Termasuk 14 AKTIF) -->
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="11" type="button">
+<span>11</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="12" type="button">
+<span>12</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="13" type="button">
+<span>13</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<!-- Soal 14: SEDANG AKTIF / DIPILIH (Highlight Fokus) -->
+<button class="soal-btn relative h-12 rounded-xl bg-secondary-container text-on-secondary-container font-label-md text-label-md flex flex-col items-center justify-center shadow-md scale-105 active:scale-100" data-num="14" type="button">
+<span class="font-bold">14</span>
+<span class="font-label-sm text-[10px] tracking-tight text-secondary-fixed leading-none mt-0.5">Aktif</span>
+<span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary-fixed opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary-container"></span>
+</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="15" type="button">
+<span>15</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<!-- Baris 4: Soal 16-20 (Termasuk 16 Belum Terjawab) -->
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="16" type="button">
+<span>16</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="17" type="button">
+<span>17</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="18" type="button">
+<span>18</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="19" type="button">
+<span>19</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="20" type="button">
+<span>20</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<!-- Baris 5: Soal 21-25 (Termasuk 21 Ragu-ragu) -->
+<!-- Soal 21: RAGU-RAGU -->
+<button class="soal-btn relative h-12 rounded-xl bg-[#fef3c7] text-[#92400e] font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="21" type="button">
+<span class="font-bold">21</span>
+<span class="material-symbols-outlined text-[13px] text-[#d97706] leading-none mt-0.5" style="font-variation-settings: 'FILL' 1;">flag</span>
+<span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#f59e0b]"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="22" type="button">
+<span>22</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="23" type="button">
+<span>23</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="24" type="button">
+<span>24</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="25" type="button">
+<span>25</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<!-- Baris 6: Soal 26-30 (26-27 Terjawab, 28-30 Belum) -->
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="26" type="button">
+<span>26</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex flex-col items-center justify-center shadow-sm active:scale-95" data-num="27" type="button">
+<span>27</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed leading-none mt-0.5">check</span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="28" type="button">
+<span>28</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="29" type="button">
+<span>29</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="30" type="button">
+<span>30</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<!-- Baris 7: Soal 31-35 (Belum Terjawab) -->
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="31" type="button">
+<span>31</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="32" type="button">
+<span>32</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="33" type="button">
+<span>33</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="34" type="button">
+<span>34</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="35" type="button">
+<span>35</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<!-- Baris 8: Soal 36-40 (Belum Terjawab) -->
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="36" type="button">
+<span>36</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="37" type="button">
+<span>37</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="38" type="button">
+<span>38</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="39" type="button">
+<span>39</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+<button class="soal-btn relative h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md flex flex-col items-center justify-center active:scale-95" data-num="40" type="button">
+<span>40</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-0.5"></span>
+</button>
+</div>
+</div>
+<!-- Keterangan Legenda Status Warna -->
+<div class="px-margin-mobile py-2.5 bg-surface-container-lowest shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
+<div class="grid grid-cols-2 gap-y-2 gap-x-4">
+<div class="flex items-center gap-2">
+<div class="w-3.5 h-3.5 rounded bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-tertiary-fixed">check</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sudah Dijawab</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3.5 h-3.5 rounded bg-secondary-container relative">
+<span class="absolute inset-0 m-auto w-1.5 h-1.5 rounded-full bg-on-secondary-container"></span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Soal Aktif (No. 14)</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3.5 h-3.5 rounded bg-[#fef3c7] flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-[#d97706]" style="font-variation-settings: 'FILL' 1;">flag</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ditandai Ragu</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3.5 h-3.5 rounded bg-surface-container"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Belum Dijawab</span>
+</div>
+</div>
+</div>
+<!-- Tombol Aksi Bawah Terintegrasi (Bottom Fixed Actions) -->
+<div class="p-margin-mobile pt-3 pb-6 bg-surface-container-low space-y-2">
+<!-- Tombol Aksi Utama: Lompat ke Soal Terpilih -->
+<button class="w-full h-12 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md active:bg-primary-container transition-colors" id="jump-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+<span id="jump-text">Lompat ke Soal No. 14</span>
+</button>
+<!-- Tombol Sekunder: Cari Soal Kosong Terdekat -->
+<button class="w-full h-11 rounded-xl bg-surface-container-lowest text-secondary font-label-md text-label-md flex items-center justify-center gap-2 shadow-sm active:bg-surface-container transition-colors" id="next-unanswered-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">find_in_page</span>
+<span>Lihat Soal Belum Terjawab Pertama (No. 16)</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const buttons = document.querySelectorAll('.soal-btn');
+    const jumpText = document.getElementById('jump-text');
+    const closeBtn = document.getElementById('close-drawer-btn');
+    const scrim = document.getElementById('drawer-scrim');
+    const drawer = document.getElementById('navigation-drawer');
+    const nextUnansweredBtn = document.getElementById('next-unanswered-btn');
+    let selectedNumber = 14;
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const num = this.getAttribute('data-num');
+        selectedNumber = num;
+        if (jumpText) {
+          jumpText.textContent = `Lompat ke Soal No. ${num}`;
+        }
+        
+        // Hapus styling ring seleksi sementara dari tombol lain
+        buttons.forEach(b => {
+          b.classList.remove('scale-105', 'shadow-lg');
+        });
+        
+        // Tambah visual feedback seleksi lokal
+        this.classList.add('scale-105', 'shadow-lg');
+      });
+    });
+
+    // Simulasi klik navigasi cepat belum terjawab
+    if (nextUnansweredBtn) {
+      nextUnansweredBtn.addEventListener('click', function() {
+        const btn16 = document.querySelector('[data-num="16"]');
+        if (btn16) {
+          btn16.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          btn16.click();
+        }
+      });
+    }
+
+    // Interaktivitas penutupan drawer
+    function closeNavigation() {
+      if (drawer && scrim) {
+        drawer.style.transform = 'translateY(100%)';
+        scrim.style.opacity = '0';
+        setTimeout(() => {
+          drawer.style.display = 'none';
+          scrim.style.display = 'none';
+        }, 300);
+      }
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeNavigation);
+    if (scrim) scrim.addEventListener('click', closeNavigation);
+    
+    const jumpBtn = document.getElementById('jump-btn');
+    if (jumpBtn) {
+      jumpBtn.addEventListener('click', function() {
+        closeNavigation();
+      });
+    }
+  })();
+</script></main></body></html>

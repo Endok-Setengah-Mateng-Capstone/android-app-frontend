@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.sch.man3merangin.ujian.exam.ExamTimerTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-15T20:33:13.725Z" hostname="ANDIKA-LOQ" time="0.009">
+  <properties/>
+  <testcase name="unsyncedSameBootCountsDown" classname="id.sch.man3merangin.ujian.exam.ExamTimerTest" time="0.007"/>
+  <testcase name="syncedUsesServerOffset" classname="id.sch.man3merangin.ujian.exam.ExamTimerTest" time="0.001"/>
+  <testcase name="rebootResumesWithStoredRemaining" classname="id.sch.man3merangin.ujian.exam.ExamTimerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
