@@ -6,28 +6,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.HelpOutline
-import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -39,24 +29,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import id.sch.man3merangin.ujian.ui.theme.GreenActive
-import id.sch.man3merangin.ujian.ui.theme.GreenActiveContainer
-import id.sch.man3merangin.ujian.ui.theme.OnPrimary
-import id.sch.man3merangin.ujian.ui.theme.OnSecondaryContainer
-import id.sch.man3merangin.ujian.ui.theme.OnSurface
-import id.sch.man3merangin.ujian.ui.theme.OnSurfaceVariant
-import id.sch.man3merangin.ujian.ui.theme.Primary
-import id.sch.man3merangin.ujian.ui.theme.Secondary
-import id.sch.man3merangin.ujian.ui.theme.SecondaryContainer
-import id.sch.man3merangin.ujian.ui.theme.SurfaceContainerHigh
-import id.sch.man3merangin.ujian.ui.theme.SurfaceContainerLow
-import id.sch.man3merangin.ujian.ui.theme.SurfaceContainerLowest
-import id.sch.man3merangin.ujian.ui.theme.WarningAmber
-import id.sch.man3merangin.ujian.ui.theme.WarningAmberContainer
+import id.sch.man3merangin.ujian.ui.theme.Space
+import id.sch.man3merangin.ujian.ui.theme.Success
+import id.sch.man3merangin.ujian.ui.theme.SuccessContainer
+import id.sch.man3merangin.ujian.ui.theme.TapTarget
+import id.sch.man3merangin.ujian.ui.theme.Warning
+import id.sch.man3merangin.ujian.ui.theme.WarningContainer
 
 @Composable
 fun SubmitConfirmationDialog(
@@ -68,143 +51,99 @@ fun SubmitConfirmationDialog(
 ) {
     val unansweredCount = (totalQuestions - answeredCount).coerceAtLeast(0)
     var isConfirmed by remember { mutableStateOf(false) }
+    val colors = MaterialTheme.colorScheme
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.7f))
-            .clickable { onDismiss() },
+            .background(colors.scrim.copy(alpha = 0.7f))
+            .clickable { onDismiss() }
+            .semantics { paneTitle = "Kumpulkan jawaban" },
         contentAlignment = Alignment.Center
     ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth(0.92f)
                 .clickable(enabled = false) {}
-                .padding(16.dp),
-            shape = RoundedCornerShape(18.dp),
-            colors = CardDefaults.cardColors(containerColor = SurfaceContainerLowest),
+                .padding(Space.l),
+            shape = MaterialTheme.shapes.large,
+            colors = CardDefaults.cardColors(containerColor = colors.surfaceContainerLowest),
             elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(Space.xl),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                verticalArrangement = Arrangement.spacedBy(Space.l)
             ) {
-                // Header Icon
-                Surface(
-                    shape = CircleShape,
-                    color = SurfaceContainerHigh,
-                    modifier = Modifier.size(56.dp)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            tint = Secondary,
-                            modifier = Modifier.size(32.dp)
-                        )
-                    }
-                }
+                IconBadge(Icons.Default.CheckCircle, size = 56.dp)
 
                 Text(
-                    text = "Konfirmasi Pengumpulan Jawaban",
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Primary,
+                    "Kumpulkan jawaban?",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = colors.onSurface,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    if (unansweredCount > 0) {
+                        "Masih ada $unansweredCount soal kosong. Jawaban yang sudah dikumpulkan tidak bisa diubah lagi."
+                    } else {
+                        "Jawaban yang sudah dikumpulkan tidak bisa diubah lagi."
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colors.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
 
-                Text(
-                    text = "Pastikan semua nomor soal telah dijawab dengan teliti sebelum mengirimkan lembar ujian.",
-                    fontSize = 12.sp,
-                    color = OnSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 16.sp
-                )
-
-                // Status 3 metrics
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(Space.s)
                 ) {
-                    MetricBox(
-                        title = "Terjawab",
-                        value = "$answeredCount",
-                        color = GreenActive,
-                        bg = GreenActiveContainer,
-                        modifier = Modifier.weight(1f)
-                    )
-                    MetricBox(
-                        title = "Ragu-ragu",
-                        value = "$doubtfulCount",
-                        color = WarningAmber,
-                        bg = WarningAmberContainer,
-                        modifier = Modifier.weight(1f)
-                    )
-                    MetricBox(
-                        title = "Kosong",
-                        value = "$unansweredCount",
-                        color = OnSurfaceVariant,
-                        bg = SurfaceContainerHigh,
-                        modifier = Modifier.weight(1f)
-                    )
+                    Metric("Terjawab", answeredCount, Success, SuccessContainer, Modifier.weight(1f))
+                    Metric("Ragu-ragu", doubtfulCount, Warning, WarningContainer, Modifier.weight(1f))
+                    Metric("Kosong", unansweredCount, colors.onSurfaceVariant, colors.surfaceContainerHigh, Modifier.weight(1f))
                 }
 
-                // Agreement checkbox
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(SurfaceContainerLow, RoundedCornerShape(8.dp))
-                        .padding(horizontal = 8.dp, vertical = 6.dp)
+                        .heightIn(min = TapTarget)
+                        .background(colors.surfaceContainerLow, MaterialTheme.shapes.small)
+                        .toggleable(value = isConfirmed, role = Role.Checkbox, onValueChange = { isConfirmed = it })
+                        .padding(horizontal = Space.s, vertical = Space.xs)
                 ) {
-                    Checkbox(
-                        checked = isConfirmed,
-                        onCheckedChange = { isConfirmed = it },
-                        colors = CheckboxDefaults.colors(checkedColor = Secondary)
-                    )
+                    Checkbox(checked = isConfirmed, onCheckedChange = null, modifier = Modifier.padding(Space.s))
                     Text(
-                        text = "Saya telah memeriksa dan yakin untuk mengakhiri sesi ujian ini.",
-                        fontSize = 11.sp,
-                        color = OnSurface,
-                        lineHeight = 15.sp
+                        "Saya sudah memeriksa jawaban dan siap mengumpulkan.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colors.onSurface
                     )
                 }
 
-                // Action Buttons
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(Space.s)
                 ) {
                     Button(
                         onClick = onConfirmSubmit,
                         enabled = isConfirmed,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp),
-                        shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = SecondaryContainer,
-                            contentColor = OnSecondaryContainer
-                        )
+                            .heightIn(min = TapTarget),
+                        shape = MaterialTheme.shapes.small
                     ) {
-                        Icon(Icons.Default.Send, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Ya, Selesaikan & Kumpulkan Ujian", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                        Text("Kumpulkan sekarang")
                     }
-
                     OutlinedButton(
                         onClick = onDismiss,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(44.dp),
-                        shape = RoundedCornerShape(10.dp)
+                            .heightIn(min = TapTarget),
+                        shape = MaterialTheme.shapes.small
                     ) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Kembali Periksa Jawaban", fontSize = 12.sp, color = OnSurface)
+                        Text("Periksa lagi")
                     }
                 }
             }
@@ -213,25 +152,14 @@ fun SubmitConfirmationDialog(
 }
 
 @Composable
-private fun MetricBox(
-    title: String,
-    value: String,
-    color: Color,
-    bg: Color,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        shape = RoundedCornerShape(8.dp),
-        color = bg,
-        modifier = modifier
-    ) {
+private fun Metric(title: String, value: Int, color: Color, bg: Color, modifier: Modifier = Modifier) {
+    Surface(shape = MaterialTheme.shapes.small, color = bg, modifier = modifier) {
         Column(
-            modifier = Modifier.padding(vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            modifier = Modifier.padding(vertical = Space.s),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(value, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = color)
-            Text(title, fontSize = 10.sp, color = color)
+            Text("$value", style = MaterialTheme.typography.titleMedium, color = color)
+            Text(title, style = MaterialTheme.typography.labelMedium, color = color)
         }
     }
 }

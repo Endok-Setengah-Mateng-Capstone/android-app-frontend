@@ -9,12 +9,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.PlayCircle
@@ -25,32 +23,30 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import id.sch.man3merangin.ujian.ui.theme.ErrorRed
-import id.sch.man3merangin.ujian.ui.theme.ErrorRedContainer
-import id.sch.man3merangin.ujian.ui.theme.OnPrimary
-import id.sch.man3merangin.ujian.ui.theme.OnSurface
-import id.sch.man3merangin.ujian.ui.theme.OnSurfaceVariant
-import id.sch.man3merangin.ujian.ui.theme.Primary
-import id.sch.man3merangin.ujian.ui.theme.Secondary
-import id.sch.man3merangin.ujian.ui.theme.SurfaceContainerHigh
-import id.sch.man3merangin.ujian.ui.theme.SurfaceContainerLow
-import id.sch.man3merangin.ujian.ui.theme.SurfaceContainerLowest
-import id.sch.man3merangin.ujian.ui.theme.WarningAmber
-import id.sch.man3merangin.ujian.ui.theme.WarningAmberContainer
+import id.sch.man3merangin.ujian.ui.theme.Space
+import id.sch.man3merangin.ujian.ui.theme.TapTarget
+import id.sch.man3merangin.ujian.ui.theme.Warning
+import id.sch.man3merangin.ujian.ui.theme.WarningContainer
 import id.sch.man3merangin.ujian.violation.Detected
 import id.sch.man3merangin.ujian.violation.ViolationCategory
 
+/**
+ * Shown when a violation is recorded. The system never locks or submits on its own,
+ * so the text only tells the student what was logged. [maxViolations] only decides
+ * when the dialog switches to the stronger error color.
+ */
 @Composable
 fun ViolationWarningDialog(
     detected: Detected,
@@ -58,203 +54,157 @@ fun ViolationWarningDialog(
     maxViolations: Int = 3,
     onDismiss: () -> Unit
 ) {
+    val colors = MaterialTheme.colorScheme
     val isCritical = violationCount >= maxViolations
-    val remainingChances = (maxViolations - violationCount).coerceAtLeast(0)
+    val accent = if (isCritical) colors.error else Warning
+    val accentContainer = if (isCritical) colors.errorContainer else WarningContainer
 
     val categoryLabel = when (detected.category) {
-        ViolationCategory.APP_EXIT -> "Tombol Home / Keluar Aplikasi"
-        ViolationCategory.SPLIT_SCREEN -> "Layar Terbagi (Split Screen)"
-        ViolationCategory.NOTIFICATION_PANEL -> "Panel Notifikasi / Layar Tidak Fokus"
-        ViolationCategory.FLOATING_PIP -> "Jendela Melayang (PIP)"
-        ViolationCategory.COPY_PASTE -> "Aktivitas Salin / Tempel"
+        ViolationCategory.APP_EXIT -> "Keluar dari aplikasi"
+        ViolationCategory.SPLIT_SCREEN -> "Layar terbagi (split screen)"
+        ViolationCategory.NOTIFICATION_PANEL -> "Panel notifikasi atau layar kehilangan fokus"
+        ViolationCategory.FLOATING_PIP -> "Jendela melayang (PiP)"
+        ViolationCategory.COPY_PASTE -> "Salin atau tempel"
         else -> detected.category.name
-    }
-
-    val warningMessage = if (isCritical) {
-        "PERHATIAN: Anda telah mencapai batas maksimal peringatan ($maxViolations kali). Pelanggaran berikutnya akan menyebabkan ujian otomatis dikumpulkan ke server pengawas."
-    } else {
-        "Perangkat mendeteksi anomali pada layar ujian. Sisa toleransi Anda: $remainingChances kali sebelum tindakan otomatis."
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.7f))
-            .clickable(enabled = false) {},
+            .background(colors.scrim.copy(alpha = 0.7f))
+            .clickable(enabled = false) {}
+            .semantics {
+                paneTitle = "Aktivitas tercatat"
+                liveRegion = LiveRegionMode.Assertive
+            },
         contentAlignment = Alignment.Center
     ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth(0.92f)
-                .padding(16.dp),
-            shape = RoundedCornerShape(18.dp),
-            colors = CardDefaults.cardColors(containerColor = SurfaceContainerLowest),
+                .padding(Space.l),
+            shape = MaterialTheme.shapes.large,
+            colors = CardDefaults.cardColors(containerColor = colors.surfaceContainerLowest),
             elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(Space.xl),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(Space.m)
             ) {
-                // Top Icon Indicator
-                Surface(
-                    shape = CircleShape,
-                    color = if (isCritical) ErrorRedContainer else WarningAmberContainer,
-                    modifier = Modifier.size(56.dp)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            Icons.Default.Warning,
-                            contentDescription = null,
-                            tint = if (isCritical) ErrorRed else WarningAmber,
-                            modifier = Modifier.size(32.dp)
-                        )
-                    }
-                }
-
-                // Prominent Warning Counter Badge
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = if (isCritical) ErrorRedContainer else WarningAmberContainer
-                ) {
-                    Text(
-                        text = "PERINGATAN KE-$violationCount DARI $maxViolations",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (isCritical) ErrorRed else WarningAmber,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                        letterSpacing = 0.5.sp
-                    )
-                }
+                IconBadge(Icons.Default.Warning, size = 56.dp, tint = accent, container = accentContainer)
 
                 Text(
-                    text = "Aktivitas Terdeteksi",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Primary,
+                    "Peringatan ke-$violationCount",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = accent,
+                    modifier = Modifier
+                        .background(accentContainer, MaterialTheme.shapes.large)
+                        .padding(horizontal = Space.m, vertical = Space.xs)
+                )
+
+                Text(
+                    "Aktivitas tercatat",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = colors.onSurface,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    "Kejadian ini dicatat dan akan dilihat guru. Ujian tidak dikunci; guru yang memutuskan tindak lanjutnya.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colors.onSurface,
                     textAlign = TextAlign.Center
                 )
 
-                Text(
-                    text = "MAN 3 Merangin • Sistem Integritas CBT",
-                    fontSize = 11.sp,
-                    color = OnSurfaceVariant,
-                    textAlign = TextAlign.Center
-                )
-
-                Text(
-                    text = warningMessage,
-                    fontSize = 12.sp,
-                    color = if (isCritical) ErrorRed else OnSurface,
-                    fontWeight = if (isCritical) FontWeight.SemiBold else FontWeight.Normal,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 17.sp
-                )
-
-                // Detailed Info Card (Matches Stitch S-06)
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = CardDefaults.cardColors(containerColor = SurfaceContainerLow)
+                    shape = MaterialTheme.shapes.medium,
+                    colors = CardDefaults.cardColors(containerColor = colors.surfaceContainerLow)
                 ) {
                     Column(
-                        modifier = Modifier.padding(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                        modifier = Modifier.padding(Space.m),
+                        verticalArrangement = Arrangement.spacedBy(Space.s)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Jenis Kejadian", fontSize = 11.sp, color = OnSurfaceVariant)
+                        DetailRow("Kejadian") {
                             Text(
-                                text = categoryLabel,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = if (isCritical) ErrorRed else WarningAmber
+                                categoryLabel,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = accent,
+                                textAlign = TextAlign.End
                             )
                         }
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Toleransi Tersisa", fontSize = 11.sp, color = OnSurfaceVariant)
-                            Text(
-                                text = if (remainingChances > 0) "$remainingChances kali kesempatan" else "Toleransi Habis",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = if (remainingChances > 0) Primary else ErrorRed
-                            )
-                        }
-
                         if (detected.durationMs > 0) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("Durasi Di Luar App", fontSize = 11.sp, color = OnSurfaceVariant)
-                                Text("${detected.durationMs / 1000} Detik", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Primary)
+                            DetailRow("Lama di luar aplikasi") {
+                                Text(
+                                    "${detected.durationMs / 1000} detik",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = colors.onSurface
+                                )
                             }
                         }
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Status Jawaban", fontSize = 11.sp, color = OnSurfaceVariant)
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Secondary, modifier = Modifier.size(13.dp))
-                                Spacer(modifier = Modifier.width(3.dp))
-                                Text("Aman di memori lokal", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = Secondary)
-                            }
+                        DetailRow("Jawaban") {
+                            Icon(Icons.Default.CheckCircle, contentDescription = null, tint = colors.primary, modifier = Modifier.size(16.dp))
+                            Spacer(Modifier.width(Space.xs))
+                            Text(
+                                "Aman, tersimpan di HP",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = colors.primary
+                            )
                         }
-
-                        Text(
-                            text = "Catatan: Seluruh aktivitas dicatat objektif pada server pengawas.",
-                            fontSize = 10.sp,
-                            color = OnSurfaceVariant,
-                            modifier = Modifier.padding(top = 2.dp)
-                        )
                     }
                 }
 
-                // Action Buttons
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(Space.s)
                 ) {
                     Button(
                         onClick = onDismiss,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp),
-                        shape = RoundedCornerShape(10.dp),
+                            .heightIn(min = TapTarget),
+                        shape = MaterialTheme.shapes.small,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isCritical) ErrorRed else Secondary,
-                            contentColor = OnPrimary
+                            containerColor = if (isCritical) colors.error else colors.primary,
+                            contentColor = colors.onPrimary
                         )
                     ) {
                         Icon(Icons.Default.PlayCircle, contentDescription = null, modifier = Modifier.size(18.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Kembali Mengerjakan Ujian", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                        Spacer(Modifier.width(Space.s))
+                        Text("Lanjut mengerjakan")
                     }
-
                     OutlinedButton(
                         onClick = onDismiss,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(44.dp),
-                        shape = RoundedCornerShape(10.dp)
+                            .heightIn(min = TapTarget),
+                        shape = MaterialTheme.shapes.small
                     ) {
-                        Icon(Icons.Default.SupportAgent, contentDescription = null, modifier = Modifier.size(18.dp), tint = OnSurfaceVariant)
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Lapor Gangguan ke Pengawas", fontSize = 12.sp, color = OnSurfaceVariant)
+                        Icon(Icons.Default.SupportAgent, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(Space.s))
+                        Text("Lapor ke pengawas")
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun DetailRow(label: String, value: @Composable () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            label,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(end = Space.m)
+        )
+        value()
     }
 }

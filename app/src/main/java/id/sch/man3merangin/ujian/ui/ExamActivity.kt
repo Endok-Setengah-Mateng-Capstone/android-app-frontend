@@ -28,13 +28,13 @@ class ExamActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Security: FLAG_SECURE prevents screenshots and screen recording
+        // FLAG_SECURE blocks screenshots, screen recording and the recents thumbnail
         window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE
         )
 
-        // Intercept Back button so student cannot accidentally exit; trigger warning dialog instead
+        // Back during the exam counts as leaving the app instead of closing it
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val state = viewModel.uiState.value
@@ -86,7 +86,6 @@ class ExamActivity : ComponentActivity() {
                             }
                         )
 
-                        // S-06 Violation dialog popup with warning counter
                         current.activeViolation?.let { violation ->
                             ViolationWarningDialog(
                                 detected = violation,
@@ -96,7 +95,6 @@ class ExamActivity : ComponentActivity() {
                             )
                         }
 
-                        // S-08 Submit confirmation dialog
                         if (current.showSubmitConfirm) {
                             val answeredCount = current.selectedAnswers.count { it.value.isNotEmpty() }
                             SubmitConfirmationDialog(
@@ -115,7 +113,6 @@ class ExamActivity : ComponentActivity() {
                     }
 
                     is UiState.Finished -> {
-                        // S-09 Receipt screen
                         ExamFinishedReceiptScreen(
                             studentName = current.studentName,
                             nisn = current.nisn,

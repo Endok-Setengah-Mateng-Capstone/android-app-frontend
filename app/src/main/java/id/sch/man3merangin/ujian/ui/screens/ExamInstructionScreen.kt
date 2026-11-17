@@ -2,23 +2,20 @@ package id.sch.man3merangin.ujian.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Assignment
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -26,32 +23,19 @@ import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import id.sch.man3merangin.ujian.ui.theme.OnPrimary
-import id.sch.man3merangin.ujian.ui.theme.OnSecondaryContainer
-import id.sch.man3merangin.ujian.ui.theme.OnSurface
-import id.sch.man3merangin.ujian.ui.theme.OnSurfaceVariant
-import id.sch.man3merangin.ujian.ui.theme.Primary
-import id.sch.man3merangin.ujian.ui.theme.Secondary
-import id.sch.man3merangin.ujian.ui.theme.SecondaryContainer
-import id.sch.man3merangin.ujian.ui.theme.Surface
-import id.sch.man3merangin.ujian.ui.theme.SurfaceContainer
-import id.sch.man3merangin.ujian.ui.theme.SurfaceContainerHigh
-import id.sch.man3merangin.ujian.ui.theme.SurfaceContainerLow
-import id.sch.man3merangin.ujian.ui.theme.SurfaceContainerLowest
+import id.sch.man3merangin.ujian.ui.theme.Space
+import id.sch.man3merangin.ujian.ui.theme.TapTarget
 
 @Composable
 fun ExamInstructionScreen(
@@ -62,236 +46,163 @@ fun ExamInstructionScreen(
     totalQuestions: Int = 40,
     onStartExam: () -> Unit
 ) {
+    val colors = MaterialTheme.colorScheme
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Surface)
+            .background(colors.background)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp, vertical = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(Space.l),
+        verticalArrangement = Arrangement.spacedBy(Space.l)
     ) {
-        // Header
-        Text(
-            text = "Konfirmasi Peserta & Tata Tertib",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Primary,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = "Pastikan data diri dan mata pelajaran telah sesuai",
-            fontSize = 12.sp,
-            color = OnSurfaceVariant
-        )
+        Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+            Text(
+                "Periksa data kamu",
+                style = MaterialTheme.typography.titleLarge,
+                color = colors.onBackground
+            )
+            Text(
+                "Pastikan nama dan mata pelajaran sudah benar sebelum mulai.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = colors.onSurfaceVariant
+            )
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Student Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = SurfaceContainerLowest),
+            shape = MaterialTheme.shapes.large,
+            colors = CardDefaults.cardColors(containerColor = colors.surfaceContainerLowest),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             Row(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(Space.l),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(14.dp)
+                horizontalArrangement = Arrangement.spacedBy(Space.l)
             ) {
-                Surface(
-                    shape = CircleShape,
-                    color = SurfaceContainerHigh,
-                    modifier = Modifier.size(54.dp)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            Icons.Default.Person,
-                            contentDescription = null,
-                            tint = Secondary,
-                            modifier = Modifier.size(32.dp)
-                        )
-                    }
-                }
-
-                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                IconBadge(Icons.Default.Person, size = 56.dp)
+                Column {
                     Text(
-                        text = studentName,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Primary
+                        studentName,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = colors.onSurface
                     )
                     Text(
-                        text = "NISN: $nisn • XII IPA 1",
-                        fontSize = 12.sp,
-                        color = OnSurfaceVariant
-                    )
-                    Text(
-                        text = "Ruang: Lab Komputer 2 (Meja 14)",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Secondary
+                        "NISN $nisn",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colors.onSurfaceVariant
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Exam Info Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = SurfaceContainerLow),
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+            shape = MaterialTheme.shapes.large,
+            colors = CardDefaults.cardColors(containerColor = colors.surfaceContainerLow)
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                modifier = Modifier.padding(Space.l),
+                verticalArrangement = Arrangement.spacedBy(Space.m)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(Space.s)
                 ) {
-                    Icon(Icons.Default.Assignment, contentDescription = null, tint = Secondary)
+                    Icon(Icons.AutoMirrored.Filled.Assignment, contentDescription = null, tint = colors.primary)
                     Text(
-                        text = examTitle,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Primary
+                        examTitle,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = colors.onSurface
                     )
                 }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = SurfaceContainerLowest,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(10.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Icon(Icons.Default.Schedule, contentDescription = null, tint = Secondary, modifier = Modifier.size(18.dp))
-                            Column {
-                                Text("Durasi", fontSize = 10.sp, color = OnSurfaceVariant)
-                                Text("$durationMinutes Menit", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Primary)
-                            }
-                        }
-                    }
-
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = SurfaceContainerLowest,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(10.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Icon(Icons.Default.Assignment, contentDescription = null, tint = Secondary, modifier = Modifier.size(18.dp))
-                            Column {
-                                Text("Jumlah Soal", fontSize = 10.sp, color = OnSurfaceVariant)
-                                Text("$totalQuestions Butir", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Primary)
-                            }
-                        }
-                    }
+                Row(horizontalArrangement = Arrangement.spacedBy(Space.m)) {
+                    Fact(Icons.Default.Schedule, "Durasi", "$durationMinutes menit", Modifier.weight(1f))
+                    Fact(Icons.AutoMirrored.Filled.Assignment, "Jumlah soal", "$totalQuestions soal", Modifier.weight(1f))
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Instructions list
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = SurfaceContainerLowest),
+            shape = MaterialTheme.shapes.large,
+            colors = CardDefaults.cardColors(containerColor = colors.surfaceContainerLowest),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                modifier = Modifier.padding(Space.l),
+                verticalArrangement = Arrangement.spacedBy(Space.l)
             ) {
                 Text(
-                    text = "Instruksi & Integritas Ujian",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Primary
+                    "Aturan selama ujian",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = colors.onSurface
                 )
-
-                InstructionItem(
-                    icon = Icons.Default.Lock,
-                    title = "Aplikasi Terkunci Otomatis",
-                    desc = "Perangkat wajib terkunci di aplikasi CBT. Jangan berpindah aplikasi atau mengaktifkan mode split screen."
+                Rule(
+                    Icons.Default.Lock,
+                    "Tetap di aplikasi ini",
+                    "Jangan pindah ke aplikasi lain, membuka layar terbagi, atau jendela melayang."
                 )
-
-                InstructionItem(
-                    icon = Icons.Default.CloudSync,
-                    title = "Penyimpanan Jawaban Mandiri",
-                    desc = "Jawaban disimpan otomatis setiap saat di memori perangkat dan tersinkron berkala ke server madrasah."
+                Rule(
+                    Icons.Default.CloudSync,
+                    "Jawaban tersimpan otomatis",
+                    "Setiap pilihanmu disimpan di HP, lalu dikirim ke server saat ada jaringan."
                 )
-
-                InstructionItem(
-                    icon = Icons.Default.Shield,
-                    title = "Pencatatan Anomali & Alarm",
-                    desc = "Tindakan keluar aplikasi atau mematikan layar akan dicatat pada log pengawas sebagai anomali integritas."
+                Rule(
+                    Icons.Default.Shield,
+                    "Pelanggaran dicatat",
+                    "Keluar dari aplikasi membunyikan alarm dan masuk ke catatan guru. Guru yang memutuskan tindak lanjutnya."
                 )
-
-                InstructionItem(
-                    icon = Icons.Default.Psychology,
-                    title = "Kejujuran Islami",
-                    desc = "Mulailah dengan basmalah, kerjakan dengan mandiri, cermat, dan junjung tinggi kejujuran Islami."
+                Rule(
+                    Icons.Default.Psychology,
+                    "Kerjakan dengan jujur",
+                    "Mulailah dengan basmalah dan kerjakan sendiri."
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(20.dp))
 
         Button(
             onClick = onStartExam,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = SecondaryContainer,
-                contentColor = OnSecondaryContainer
-            )
+                .heightIn(min = TapTarget),
+            shape = MaterialTheme.shapes.small
         ) {
-            Text("Mulai Mengerjakan Ujian", fontSize = 14.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.width(8.dp))
-            Icon(Icons.Default.ArrowForward, contentDescription = null, modifier = Modifier.size(18.dp))
+            Text("Mulai ujian")
+            Spacer(Modifier.width(Space.s))
+            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(18.dp))
         }
     }
 }
 
 @Composable
-private fun InstructionItem(
-    icon: ImageVector,
-    title: String,
-    desc: String
-) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        verticalAlignment = Alignment.Top
+private fun Fact(icon: ImageVector, label: String, value: String, modifier: Modifier = Modifier) {
+    Surface(
+        shape = MaterialTheme.shapes.small,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
+        modifier = modifier
     ) {
-        Surface(
-            shape = CircleShape,
-            color = SurfaceContainerHigh,
-            modifier = Modifier.size(32.dp)
+        Row(
+            modifier = Modifier.padding(Space.m),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Space.s)
         ) {
-            Box(contentAlignment = Alignment.Center) {
-                Icon(icon, contentDescription = null, tint = Secondary, modifier = Modifier.size(16.dp))
+            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+            Column {
+                Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(value, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
             }
         }
+    }
+}
+
+@Composable
+private fun Rule(icon: ImageVector, title: String, desc: String) {
+    Row(horizontalArrangement = Arrangement.spacedBy(Space.m)) {
+        IconBadge(icon, size = 36.dp)
         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Text(title, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Primary)
-            Text(desc, fontSize = 12.sp, color = OnSurfaceVariant, lineHeight = 16.sp)
+            Text(title, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
+            Text(desc, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

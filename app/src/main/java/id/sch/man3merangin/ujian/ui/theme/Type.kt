@@ -6,60 +6,25 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-val Typography = Typography(
-    headlineLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Bold,
-        fontSize = 28.sp,
-        lineHeight = 36.sp,
-        letterSpacing = (-0.5).sp
-    ),
-    headlineMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 22.sp,
-        lineHeight = 28.sp
-    ),
-    headlineSmall = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 18.sp,
-        lineHeight = 24.sp
-    ),
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp
-    ),
-    bodyMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        lineHeight = 20.sp
-    ),
-    bodySmall = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 16.sp
-    ),
-    labelLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 14.sp,
-        lineHeight = 20.sp
-    ),
-    labelMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 12.sp,
-        lineHeight = 16.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 11.sp,
-        lineHeight = 14.sp
-    )
+private fun style(size: Int, line: Int, weight: FontWeight) = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = weight,
+    fontSize = size.sp,
+    lineHeight = line.sp
 )
+
+// Nothing in the app goes below 12sp.
+val Typography = Typography(
+    titleLarge = style(22, 28, FontWeight.Bold),
+    titleMedium = style(16, 22, FontWeight.SemiBold),
+    titleSmall = style(14, 20, FontWeight.SemiBold),
+    bodyLarge = style(16, 24, FontWeight.Normal),
+    bodyMedium = style(14, 20, FontWeight.Normal),
+    bodySmall = style(12, 16, FontWeight.Normal),
+    labelLarge = style(14, 20, FontWeight.SemiBold),
+    labelMedium = style(12, 16, FontWeight.SemiBold),
+    labelSmall = style(12, 16, FontWeight.Medium)
+)
+
+/** For tokens, codes and the countdown. */
+val MonoStyle = TextStyle(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
