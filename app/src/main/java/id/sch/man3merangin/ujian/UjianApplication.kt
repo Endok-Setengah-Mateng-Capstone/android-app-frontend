@@ -9,7 +9,6 @@ import id.sch.man3merangin.ujian.data.Session
 import id.sch.man3merangin.ujian.data.ViolationRepository
 import id.sch.man3merangin.ujian.data.db.AppDatabase
 import id.sch.man3merangin.ujian.data.net.ExamApi
-import id.sch.man3merangin.ujian.data.net.FakeExamApi
 import id.sch.man3merangin.ujian.data.net.HttpExamApi
 import id.sch.man3merangin.ujian.time.MemoryClockStore
 import id.sch.man3merangin.ujian.time.TrustedClock
@@ -45,17 +44,11 @@ class UjianApplication : Application() {
 
         clock = TrustedClock(store = MemoryClockStore())
 
-        // Default to FakeExamApi with sample package for standalone testing; can point to server URL if configured
-        val baseUrl = prefs.getString("server_base_url", null)
-        api = if (!baseUrl.isNullOrBlank()) {
-            HttpExamApi(
-                baseUrl = baseUrl,
-                sessionProvider = { session.token },
-                deviceIdProvider = { DeviceId.get(prefs) }
-            )
-        } else {
-            FakeExamApi()
-        }
+        api = HttpExamApi(
+            baseUrl = BuildConfig.API_BASE_URL,
+            sessionProvider = { session.token },
+            deviceIdProvider = { DeviceId.get(prefs) }
+        )
 
         answerRepository = AnswerRepository(database)
         violationRepository = ViolationRepository(database)

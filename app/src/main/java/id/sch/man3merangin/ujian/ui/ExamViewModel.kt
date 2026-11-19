@@ -143,11 +143,11 @@ class ExamViewModel : ViewModel() {
             }
 
             // Fallback content or opened from envelope
+            // TODO(Task 9): token must come from TokenScreen; hard-coded token and empty fallback are interim
             val content = try {
                 PackageCrypto.open(envelope, "MN3-9X4")
             } catch (_: Exception) {
-                (app.api as? id.sch.man3merangin.ujian.data.net.FakeExamApi)?.sampleContent
-                    ?: ExamContent(questions = emptyList())
+                ExamContent(questions = emptyList())
             }
 
             // Deterministic student order
