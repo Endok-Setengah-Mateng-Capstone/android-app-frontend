@@ -63,11 +63,20 @@ class SyncWorkerTest {
 
     @Test fun retryResendsSameIds() {
         seed(2)
-        fake.shouldFailSync = true
+        val sent = mutableListOf<List<String>>()
+        var fail = true
+        app.api = object : ExamApi by fake {
+            // server accepted, client timed out
+            override suspend fun sync(batch: List<SyncItem>): SyncResult {
+                sent += batch.map { it.id }
+                if (fail) throw IOException("timeout")
+                return SyncResult(batch.map { it.id })
+            }
+        }
         assertEquals(Result.retry(), run())
-        fake.shouldFailSync = false
+        fail = false
         assertEquals(Result.success(), run())
-        assertEquals(listOf("id0", "id1"), fake.receivedSyncItems.map { it.id })
+        assertEquals(listOf(listOf("id0", "id1"), listOf("id0", "id1")), sent)
         assertEquals(emptyList<String>(), ids())
     }
 

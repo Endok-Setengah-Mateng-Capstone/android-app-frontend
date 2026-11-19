@@ -16,6 +16,7 @@ import id.sch.man3merangin.ujian.data.net.ApiException
 import id.sch.man3merangin.ujian.data.net.DeviceMismatchException
 import id.sch.man3merangin.ujian.data.net.SyncItem
 import java.io.IOException
+import kotlinx.coroutines.CancellationException
 import java.util.concurrent.TimeUnit
 
 class SyncWorker(
@@ -47,6 +48,8 @@ class SyncWorker(
                 db.outboxDao().delete(response.acceptedIds)
             }
             Result.success()
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: IOException) {
             Result.retry()
         } catch (_: DeviceMismatchException) {

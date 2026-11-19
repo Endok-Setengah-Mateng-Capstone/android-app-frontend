@@ -14,9 +14,7 @@ import java.util.UUID
 
 @Serializable
 data class ViolationPayload(
-    val id: String,
     val examId: String,
-    val nisn: String,
     val category: String,
     val startedAt: Long,
     val durationMs: Long,
@@ -42,9 +40,7 @@ class ViolationRepository(
         )
 
         val payload = ViolationPayload(
-            id = violationId,
             examId = examId,
-            nisn = nisn,
             category = d.category.name,
             startedAt = d.startedAt,
             durationMs = d.durationMs,
@@ -52,7 +48,7 @@ class ViolationRepository(
         )
 
         val outboxEntity = OutboxEntity(
-            id = uuid(),
+            id = violationId, // server uses the item id as the violation PK
             kind = "VIOLATION",
             payloadJson = json.encodeToString(payload),
             createdAt = d.startedAt

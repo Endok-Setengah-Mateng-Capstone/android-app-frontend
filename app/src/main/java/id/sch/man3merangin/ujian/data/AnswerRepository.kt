@@ -29,6 +29,7 @@ data class SubmitPayload(
 
 class AnswerRepository(
     private val db: AppDatabase,
+    // TODO(Task 10b): inject TrustedClock-based time
     private val clock: () -> Long = { System.currentTimeMillis() },
     private val uuid: () -> String = { UUID.randomUUID().toString() }
 ) {

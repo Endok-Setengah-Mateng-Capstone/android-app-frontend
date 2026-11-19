@@ -139,7 +139,18 @@ class ExamViewModel : ViewModel() {
                     pkg.envelopeJson
                 )
             } else {
-                app.api.downloadPackage(examId)
+                try {
+                    app.api.downloadPackage(examId)
+                } catch (e: java.io.IOException) {
+                    _uiState.value = UiState.TokenEntry(error = "Gagal mengunduh soal. Periksa koneksi.")
+                    return@launch
+                } catch (e: id.sch.man3merangin.ujian.data.net.ApiException) {
+                    _uiState.value = UiState.TokenEntry(error = "Gagal mengunduh soal (${e.code}).")
+                    return@launch
+                } catch (e: id.sch.man3merangin.ujian.data.net.DeviceMismatchException) {
+                    _uiState.value = UiState.TokenEntry(error = e.message)
+                    return@launch
+                }
             }
 
             // Fallback content or opened from envelope

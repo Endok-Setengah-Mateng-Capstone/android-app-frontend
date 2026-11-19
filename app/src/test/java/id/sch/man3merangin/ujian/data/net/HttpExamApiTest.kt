@@ -39,7 +39,7 @@ class HttpExamApiTest {
         val req = server.takeRequest()
         assertEquals("/sync", req.path)
         assertEquals("Bearer sess-1", req.getHeader("Authorization"))
-        assertTrue(req.body.readUtf8().contains(""""id":"a""""))
+        assertEquals("""{"items":[{"id":"a","kind":"ANSWER","payloadJson":"{}"}]}""", req.body.readUtf8())
     }
 
     @Test fun serverErrorThrowsApiException() = runBlocking {
@@ -48,7 +48,7 @@ class HttpExamApiTest {
     }
 
     @Test fun sendsDeviceIdHeader() = runBlocking {
-        server.enqueue(MockResponse().setBody("""{"timeMs":5}"""))
+        server.enqueue(MockResponse().setBody("""{"serverNowMs":5}"""))
         assertEquals(5L, api.serverTime())
         assertEquals("dev-uuid", server.takeRequest().getHeader("X-Device-Id"))
     }
@@ -56,5 +56,31 @@ class HttpExamApiTest {
     @Test fun status409ThrowsDeviceMismatch() = runBlocking {
         server.enqueue(MockResponse().setResponseCode(409))
         try { api.sync(emptyList()); fail() } catch (_: DeviceMismatchException) {}
+    }
+
+    @Test fun listExamsParsesContractShape() = runBlocking {
+        server.enqueue(MockResponse().setBody("""[{"examId":"e1","version":2,"startAt":10,"endAt":20}]"""))
+        assertEquals(listOf(ExamSummary("e1", version = 2, startAt = 10, endAt = 20)), api.listExams())
+    }
+
+    @Test fun readyPostsVersion() = runBlocking {
+        server.enqueue(MockResponse().setResponseCode(204))
+        api.ready("e1", 3)
+        val req = server.takeRequest()
+        assertEquals("/exams/e1/ready", req.path)
+        assertEquals("""{"version":3}""", req.body.readUtf8())
+    }
+
+    @Test fun heartbeatPostsCountAndParsesServerNow() = runBlocking {
+        server.enqueue(MockResponse().setBody("""{"serverNowMs":99}"""))
+        assertEquals(99L, api.heartbeat("e1", 4))
+        val req = server.takeRequest()
+        assertEquals("/exams/e1/heartbeat", req.path)
+        assertEquals("""{"answeredCount":4}""", req.body.readUtf8())
+    }
+
+    @Test fun myAnswersParsesContractShape() = runBlocking {
+        server.enqueue(MockResponse().setBody("""{"answers":[{"questionId":"q","selected":["a"],"answeredAt":7}],"submittedAt":null}"""))
+        assertEquals(RemoteAnswers(listOf(RemoteAnswer("q", listOf("a"), 7)), null), api.myAnswers("e1"))
     }
 }

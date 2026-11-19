@@ -1,6 +1,8 @@
 package id.sch.man3merangin.ujian.data.net
 
 import id.sch.man3merangin.ujian.data.crypto.Envelope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -33,6 +35,10 @@ class HttpExamApi(
         return builder
     }
 
+    // OkHttp execute() is blocking: always run it off the caller's (possibly Main) dispatcher.
+    private suspend fun <T> call(request: Request, parse: (okhttp3.Response) -> T): T =
+        withContext(Dispatchers.IO) { client.newCall(request).execute().use(parse) }
+
     private fun handleResponse(response: okhttp3.Response): String {
         val code = response.code
         val bodyString = response.body?.string().orEmpty()
@@ -51,48 +57,48 @@ class HttpExamApi(
     override suspend fun login(nisn: String, password: String): LoginResult {
         val reqBody = json.encodeToString(LoginRequest(nisn, password)).toRequestBody(jsonMediaType)
         val request = requestBuilder("auth/login").post(reqBody).build()
-        client.newCall(request).execute().use { response ->
+        return call(request) { response ->
             val body = handleResponse(response)
-            return json.decodeFromString<LoginResult>(body)
+            json.decodeFromString<LoginResult>(body)
         }
     }
 
     override suspend fun listExams(): List<ExamSummary> {
         val request = requestBuilder("exams").get().build()
-        client.newCall(request).execute().use { response ->
+        return call(request) { response ->
             val body = handleResponse(response)
-            return json.decodeFromString<List<ExamSummary>>(body)
+            json.decodeFromString<List<ExamSummary>>(body)
         }
     }
 
     override suspend fun downloadPackage(examId: String): Envelope {
         val request = requestBuilder("exams/$examId/package").get().build()
-        client.newCall(request).execute().use { response ->
+        return call(request) { response ->
             val body = handleResponse(response)
-            return json.decodeFromString<Envelope>(body)
+            json.decodeFromString<Envelope>(body)
         }
     }
 
     @Serializable
-    private data class SyncBatchRequest(val batch: List<SyncItem>)
+    private data class SyncBatchRequest(val items: List<SyncItem>)
 
     override suspend fun sync(batch: List<SyncItem>): SyncResult {
         val reqBody = json.encodeToString(SyncBatchRequest(batch)).toRequestBody(jsonMediaType)
         val request = requestBuilder("sync").post(reqBody).build()
-        client.newCall(request).execute().use { response ->
+        return call(request) { response ->
             val body = handleResponse(response)
-            return json.decodeFromString<SyncResult>(body)
+            json.decodeFromString<SyncResult>(body)
         }
     }
 
     @Serializable
-    private data class TimeResponse(val timeMs: Long)
+    private data class TimeResponse(val serverNowMs: Long)
 
     override suspend fun serverTime(): Long {
         val request = requestBuilder("time").get().build()
-        client.newCall(request).execute().use { response ->
+        return call(request) { response ->
             val body = handleResponse(response)
-            return json.decodeFromString<TimeResponse>(body).timeMs
+            json.decodeFromString<TimeResponse>(body).serverNowMs
         }
     }
 
@@ -102,7 +108,7 @@ class HttpExamApi(
     override suspend fun ready(examId: String, version: Int) {
         val reqBody = json.encodeToString(ReadyRequest(version)).toRequestBody(jsonMediaType)
         val request = requestBuilder("exams/$examId/ready").post(reqBody).build()
-        client.newCall(request).execute().use { response ->
+        call(request) { response ->
             handleResponse(response)
         }
     }
@@ -115,17 +121,17 @@ class HttpExamApi(
     override suspend fun heartbeat(examId: String, answeredCount: Int): Long {
         val reqBody = json.encodeToString(HeartbeatRequest(answeredCount)).toRequestBody(jsonMediaType)
         val request = requestBuilder("exams/$examId/heartbeat").post(reqBody).build()
-        client.newCall(request).execute().use { response ->
+        return call(request) { response ->
             val body = handleResponse(response)
-            return json.decodeFromString<HeartbeatResponse>(body).serverNowMs
+            json.decodeFromString<HeartbeatResponse>(body).serverNowMs
         }
     }
 
     override suspend fun myAnswers(examId: String): RemoteAnswers {
         val request = requestBuilder("exams/$examId/my-answers").get().build()
-        client.newCall(request).execute().use { response ->
+        return call(request) { response ->
             val body = handleResponse(response)
-            return json.decodeFromString<RemoteAnswers>(body)
+            json.decodeFromString<RemoteAnswers>(body)
         }
     }
 }
