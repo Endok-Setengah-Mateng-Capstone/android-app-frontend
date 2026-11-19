@@ -112,6 +112,7 @@ class ExamViewModel : ViewModel() {
                 session.nisn = nisn
                 session.token = "session-valid-$nisn"
                 session.rememberToken(nisn, session.token!!)
+                Scheduler.pullNow(app)
                 session.studentName = "Ahmad Fauzan Al-Ghifari"
 
                 activeExamId = envelope.examId

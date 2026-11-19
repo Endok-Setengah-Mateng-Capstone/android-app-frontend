@@ -6,6 +6,7 @@ import id.sch.man3merangin.ujian.data.db.AppDatabase
 import id.sch.man3merangin.ujian.data.db.ExamPackageEntity
 import id.sch.man3merangin.ujian.data.net.ExamApi
 import id.sch.man3merangin.ujian.time.TrustedClock
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -24,34 +25,50 @@ class ExamRepository(
 
     fun packages(): Flow<List<ExamPackageEntity>> = db.examPackageDao().getAllFlow()
 
+    /** Failures of the last [refresh] call (listing or per-exam download); the worker retries when > 0. */
+    var failures = 0
+        private set
+
     suspend fun refresh(): Int {
         var count = 0
-        try {
-            val serverTime = api.serverTime()
-            clock.sync(serverTime)
-
-            val remoteExams = api.listExams()
-            db.examPackageDao().setPublished(remoteExams.map { it.examId })
-            for (exam in remoteExams) {
+        failures = 0
+        val remoteExams = try {
+            clock.sync(api.serverTime())
+            api.listExams().also { db.examPackageDao().setPublished(it.map { e -> e.examId }) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            failures++
+            return 0
+        }
+        for (exam in remoteExams) {
+            try {
                 val local = db.examPackageDao().getById(exam.examId)
                 if (local == null || exam.version > local.version) {
                     val env = api.downloadPackage(exam.examId)
-                    val entity = ExamPackageEntity(
-                        examId = exam.examId,
-                        title = env.title,
-                        startAt = env.startAt,
-                        endAt = env.endAt,
-                        envelopeJson = json.encodeToString(env),
-                        version = exam.version
+                    db.examPackageDao().insert(
+                        ExamPackageEntity(
+                            examId = exam.examId,
+                            title = env.title,
+                            startAt = env.startAt,
+                            endAt = env.endAt,
+                            envelopeJson = json.encodeToString(env),
+                            version = exam.version
+                        )
                     )
-                    db.examPackageDao().insert(entity)
                     try {
                         api.ready(exam.examId, exam.version)
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (_: Exception) {}
                     count++
                 }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                failures++
             }
-        } catch (_: Exception) {}
+        }
         return count
     }
 

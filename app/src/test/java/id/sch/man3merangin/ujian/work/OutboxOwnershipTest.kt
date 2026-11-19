@@ -59,6 +59,12 @@ class OutboxOwnershipTest {
         row("a1", "A", 1)
         app.session.clear()
         assertEquals("tokA", app.session.tokenFor("A"))
+        val fake = FakeExamApi()
+        app.api = object : ExamApi by fake {
+            override suspend fun sync(batch: List<SyncItem>, sessionToken: String): SyncResult = throw java.io.IOException("down")
+        }
+        run()
+        assertEquals("tokA", app.session.tokenFor("A"))
     }
 
     @Test fun tokenForgottenWhenOutboxOfNisnEmpty() {

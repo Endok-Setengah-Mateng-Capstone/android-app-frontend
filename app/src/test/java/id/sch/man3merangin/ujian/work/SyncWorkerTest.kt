@@ -14,6 +14,7 @@ import id.sch.man3merangin.ujian.data.net.SyncResult
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -96,6 +97,7 @@ class SyncWorkerTest {
             }
             assertEquals(Result.retry(), run())
             assertEquals(listOf("id0", "id1"), ids())
+            if (code == 401) assertNull(app.session.tokenFor("A"))
         }
     }
 
@@ -106,9 +108,28 @@ class SyncWorkerTest {
         assertEquals(listOf("id0"), ids())
     }
 
-    @Test fun batchIsCappedAt50() {
-        seed(60)
+    @Test fun drainsAllRowsInOneRun() {
+        seed(120)
+        val sizes = mutableListOf<Int>()
+        app.api = object : ExamApi by fake {
+            override suspend fun sync(batch: List<SyncItem>, sessionToken: String): SyncResult {
+                sizes += batch.size
+                return SyncResult(batch.map { it.id })
+            }
+        }
         assertEquals(Result.success(), run())
-        assertEquals(50, fake.receivedSyncItems.size)
+        assertEquals(listOf(50, 50, 20), sizes)
+        assertEquals(emptyList<String>(), ids())
+    }
+
+    @Test fun zeroAcceptedStopsDrain() {
+        seed(3)
+        var calls = 0
+        app.api = object : ExamApi by fake {
+            override suspend fun sync(batch: List<SyncItem>, sessionToken: String): SyncResult { calls++; return SyncResult(emptyList()) }
+        }
+        run()
+        assertEquals(1, calls)
+        assertEquals(3, ids().size)
     }
 }

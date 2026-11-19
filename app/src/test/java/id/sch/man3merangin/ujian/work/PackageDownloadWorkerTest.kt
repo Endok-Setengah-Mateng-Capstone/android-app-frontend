@@ -1,5 +1,7 @@
 package id.sch.man3merangin.ujian.work
 
+import androidx.work.ListenableWorker.Result
+import androidx.work.testing.TestListenableWorkerBuilder
 import id.sch.man3merangin.ujian.UjianApplication
 import id.sch.man3merangin.ujian.data.ExamRepository
 import id.sch.man3merangin.ujian.data.crypto.Envelope
@@ -32,12 +34,16 @@ class PackageDownloadWorkerTest {
     private var listing = mutableListOf<ExamSummary>()
     private var downloads = 0
     private var fail = false
+    private var failList = false
+    private var failDownloadOf: String? = null
 
     private fun exam(id: String, v: Int) = ExamSummary(id, "T$id", v, 0, 1)
     private val api = object : ExamApi by (FakeExamApi().also { fake = it }) {
-        override suspend fun listExams(): List<ExamSummary> = if (fail) throw IOException("down") else listing
+        override suspend fun listExams(): List<ExamSummary> = if (fail || failList) throw IOException("down") else listing
         override suspend fun serverTime(): Long = if (fail) throw IOException("down") else 5_000_000L
-        override suspend fun downloadPackage(examId: String): Envelope { downloads++; return fake.downloadPackage(examId) }
+        override suspend fun downloadPackage(examId: String): Envelope {
+        if (examId == failDownloadOf) throw IOException("boom")
+        downloads++; return fake.downloadPackage(examId) }
     }
     private lateinit var repo: ExamRepository
 
@@ -77,6 +83,19 @@ class PackageDownloadWorkerTest {
         fail = true
         assertEquals(0, repo.refresh())
         assertEquals(1, repo.packages().first().size)
+        fail = false; failList = true
+        assertEquals(0, repo.refresh())
+        assertEquals(1, repo.packages().first().size)
+    }
+
+    @Test fun oneFailedDownloadDoesNotBlockOthers() = runBlocking {
+        listing = mutableListOf(exam("e1", 1), exam("e2", 1))
+        failDownloadOf = "e1"
+        val app = RuntimeEnvironment.getApplication() as UjianApplication
+        app.examRepository = repo
+        assertEquals(Result.retry(), TestListenableWorkerBuilder<PackageDownloadWorker>(app).build().doWork())
+        assertNull(db.examPackageDao().getById("e1"))
+        assertNotNull(db.examPackageDao().getById("e2"))
     }
 
     @Test fun successfulPullSyncsClock() = runBlocking {

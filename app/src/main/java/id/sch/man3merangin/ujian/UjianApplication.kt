@@ -27,8 +27,7 @@ class UjianApplication : Application() {
         private set
     lateinit var violationRepository: ViolationRepository
         private set
-    lateinit var examRepository: ExamRepository
-        private set
+    lateinit var examRepository: ExamRepository // setter open for test injection
     lateinit var alarmPlayer: IAlarmPlayer
         private set
 
@@ -55,6 +54,7 @@ class UjianApplication : Application() {
 
         try {
             Scheduler.schedulePackages(this)
+            Scheduler.pullNow(this)
         } catch (_: Throwable) {
             // Ignored in test environments where WorkManager is uninitialized
         }
