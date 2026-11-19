@@ -17,14 +17,12 @@ import id.sch.man3merangin.ujian.violation.IAlarmPlayer
 import id.sch.man3merangin.ujian.work.Scheduler
 
 class UjianApplication : Application() {
-    lateinit var database: AppDatabase
-        private set
+    lateinit var database: AppDatabase // setter open for test injection
     lateinit var session: Session
         private set
     lateinit var clock: TrustedClock
         private set
-    lateinit var api: ExamApi
-        private set
+    lateinit var api: ExamApi // setter open for test injection
     lateinit var answerRepository: AnswerRepository
         private set
     lateinit var violationRepository: ViolationRepository

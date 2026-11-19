@@ -13,6 +13,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import id.sch.man3merangin.ujian.UjianApplication
 import id.sch.man3merangin.ujian.data.net.ApiException
+import id.sch.man3merangin.ujian.data.net.DeviceMismatchException
 import id.sch.man3merangin.ujian.data.net.SyncItem
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -48,8 +49,11 @@ class SyncWorker(
             Result.success()
         } catch (_: IOException) {
             Result.retry()
+        } catch (_: DeviceMismatchException) {
+            // TODO(Task 10c): surface "perangkat belum diizinkan" in UI; rows are kept for later
+            Result.success()
         } catch (e: ApiException) {
-            if (e.code == 401 || e.code in 500..599) {
+            if (e.code == 401 || e.code == 403 || e.code in 500..599) {
                 Result.retry()
             } else {
                 Result.failure()
