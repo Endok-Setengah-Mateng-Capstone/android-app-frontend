@@ -3,6 +3,9 @@ package id.sch.man3merangin.ujian.data.crypto
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
+import java.io.File
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 class PackageCryptoTest {
 
@@ -97,5 +100,14 @@ class PackageCryptoTest {
         assertThrows(WrongTokenException::class.java) {
             PackageCrypto.open(tampered, token)
         }
+    }
+
+    @Serializable
+    private data class Vector(val token: String, val envelope: Envelope, val content: ExamContent)
+
+    @Test
+    fun vector1FixtureOpensWithItsToken() {
+        val v = Json { ignoreUnknownKeys = true }.decodeFromString<Vector>(File("../fixtures/vector1.json").readText())
+        assertEquals(v.content, PackageCrypto.open(v.envelope, v.token))
     }
 }

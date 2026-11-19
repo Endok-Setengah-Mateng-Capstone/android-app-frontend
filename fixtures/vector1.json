@@ -1,0 +1,56 @@
+{
+    "token": "K7MQ2XJ9",
+    "envelope": {
+        "examId": "exam-vector-1",
+        "title": "Vektor Uji 1",
+        "startAt": 1700000000000,
+        "endAt": 1700003600000,
+        "saltB64": "c2FsdHNhbHRzYWx0MTIzNA==",
+        "iterations": 120000,
+        "ivB64": "P7C+JVUwokzpiW7+",
+        "cipherB64": "7p8zKCWSJh0wZL2zVaH0n0bgvh2f5mEe4DnizisJxfE8H0ap47RmebXDndXgACmgTjhcvAkkaUSSRkDx0FlYqmptp59sY9lHdmC/29bUKRuTBgvFd05liEorQfyiuJOG1tsNhvyDap9qF10XioJJTy1EcsIPDe9ZalVTDnGR2iq7Z8MsCikikY4wprXUTa8Pd7JkyYZk9iJb984kmHDZ8kGDiiT4L3Qz9ZJYSU1l1N9Z5UpSNwyaFbl1O+ueCMLocjbGwldbIlL0D42BSQCPhPznjP0pJoR0ywrNJE16Hv18nSlmxPPnTI9j0WpaB1LsuZNPInplpwT/d14t/K/HFF1omHN9+MHVIBQTBM380D+8vyXxl8qh6GQUPombnbOGQxiv9J4zA1H4ZAp2YnPXMv9dAb30thD/mcX7TIPDrkiwsW+S+kWibcvfVvk4znCG8+rqGrt0fQmA8W++SJOcRki238hDjtfHpYEuYD9rQqehUneymEVrDI3GWK/FAGYKacZhvkzMtnDI3xra/uMpavyBwFkgtYceWy0Kx4IQ7TApEKpp6FVdd3A6rvSiCAyXicYvWJOjsZGJUEcjoeqKMP6orMWSVpV4iUqhYTCZ"
+    },
+    "content": {
+        "questions": [
+            {
+                "id": "q1",
+                "no": 1,
+                "text": "Ibu kota Indonesia?",
+                "type": "SINGLE",
+                "options": [
+                    {
+                        "id": "a",
+                        "text": "Jakarta"
+                    },
+                    {
+                        "id": "b",
+                        "text": "Bandung"
+                    }
+                ]
+            },
+            {
+                "id": "q2",
+                "no": 2,
+                "text": "Pilih bilangan prima.",
+                "type": "MULTI",
+                "options": [
+                    {
+                        "id": "a",
+                        "text": "2"
+                    },
+                    {
+                        "id": "b",
+                        "text": "4"
+                    },
+                    {
+                        "id": "c",
+                        "text": "7"
+                    }
+                ],
+                "imageB64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+            }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true
+    }
+}
