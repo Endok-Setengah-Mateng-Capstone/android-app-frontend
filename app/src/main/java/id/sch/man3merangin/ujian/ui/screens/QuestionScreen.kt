@@ -170,7 +170,7 @@ fun QuestionScreen(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
                     Text(
-                        text = "Soal ${currentIndex + 1} dari ${questions.size} · ${currentQuestion.points} poin",
+                        text = "Soal ${currentIndex + 1} dari ${questions.size} · ${currentQuestion.points.toString().removeSuffix(".0").replace('.', ',')} poin",
                         style = MaterialTheme.typography.labelMedium,
                         color = colors.primary
                     )

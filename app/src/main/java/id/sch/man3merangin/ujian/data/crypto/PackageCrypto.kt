@@ -6,7 +6,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.nio.charset.StandardCharsets
 import java.security.SecureRandom
-import javax.crypto.AEADBadTagException
 import javax.crypto.Cipher
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.GCMParameterSpec
@@ -35,7 +34,7 @@ data class Question(
     val type: QuestionType,
     val options: List<Option>,
     val imageB64: String? = null,
-    val points: Double = 2.5
+    val points: Double = 1.0
 )
 
 @Serializable
@@ -107,6 +106,8 @@ object PackageCrypto {
 
     fun open(env: Envelope, token: String): ExamContent {
         return try {
+            // DoS guard: an attacker-controlled iteration count must not stall the device
+            require(env.iterations in 10_000..1_000_000)
             val salt = decoder.decode(env.saltB64)
             val iv = decoder.decode(env.ivB64)
             val cipherBytes = decoder.decode(env.cipherB64)
@@ -119,10 +120,7 @@ object PackageCrypto {
             val plainBytes = cipher.doFinal(cipherBytes)
             val plainJson = String(plainBytes, StandardCharsets.UTF_8)
             json.decodeFromString<ExamContent>(plainJson)
-        } catch (e: AEADBadTagException) {
-            throw WrongTokenException()
         } catch (e: Exception) {
-            if (e is WrongTokenException) throw e
             throw WrongTokenException()
         }
     }

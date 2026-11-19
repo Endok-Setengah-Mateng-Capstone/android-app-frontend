@@ -26,8 +26,7 @@ class FakeExamApi : ExamApi {
                     Option("b", "Kandungan mineral nitrogen anorganik yang terlalu pekat"),
                     Option("c", "Intensitas radiasi ultraviolet gelombang pendek"),
                     Option("d", "Fluktuasi suhu permukaan akibat kanopi terbuka")
-                ),
-                points = 2.5
+                )
             ),
             Question(
                 id = "q2",
@@ -39,8 +38,7 @@ class FakeExamApi : ExamApi {
                     Option("b", "La dharara wa la dhirar (larangan menimbulkan bahaya bagi diri sendiri dan ekosistem)"),
                     Option("c", "Eksploitasi sumber daya tambang tanpa batas untuk percepatan ekonomi lokal"),
                     Option("d", "Tawazun (menjaga keseimbangan ekologis yang telah diciptakan Allah)")
-                ),
-                points = 2.5
+                )
             ),
             Question(
                 id = "q3",
@@ -52,8 +50,7 @@ class FakeExamApi : ExamApi {
                     Option("b", "Mitokondria"),
                     Option("c", "Retikulum endoplasma kasar"),
                     Option("d", "Badan golgi")
-                ),
-                points = 2.5
+                )
             )
         ),
         shuffleQuestions = false,
@@ -69,7 +66,7 @@ class FakeExamApi : ExamApi {
             endAt = System.currentTimeMillis() + 7200_000L,
             token = "MN3-9X4",
             saltB64 = "c2FsdHNhbHRzYWx0MTIzNA==",
-            iterations = 1000
+            iterations = 10_000
         )
     }
 

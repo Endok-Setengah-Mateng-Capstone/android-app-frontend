@@ -28,7 +28,7 @@ class PackageCryptoTest {
 
     private val token = "MN3-9X4"
     private val saltB64 = "c2FsdHNhbHRzYWx0MTIzNA=="
-    private val iterations = 1000
+    private val iterations = 10_000
 
     @Test
     fun roundTripWithRightToken() {
@@ -96,10 +96,29 @@ class PackageCryptoTest {
             iterations = iterations
         )
 
-        val tampered = env.copy(cipherB64 = env.cipherB64.reversed())
+        val bytes = java.util.Base64.getDecoder().decode(env.cipherB64)
+        bytes[0] = (bytes[0].toInt() xor 1).toByte()
+        val tampered = env.copy(cipherB64 = java.util.Base64.getEncoder().encodeToString(bytes))
         assertThrows(WrongTokenException::class.java) {
             PackageCrypto.open(tampered, token)
         }
+    }
+
+    @Test
+    fun absurdIterationsRejected() {
+        val env = PackageCrypto.seal(sampleContent, "exam-1", "T", 1L, 2L, token, saltB64, iterations)
+        listOf(0, 9_999, 1_000_001, Int.MAX_VALUE).forEach {
+            assertThrows(WrongTokenException::class.java) { PackageCrypto.open(env.copy(iterations = it), token) }
+        }
+    }
+
+    @Test
+    fun pointsRoundTripAndDefaultOne() {
+        val content = ExamContent(listOf(sampleContent.questions[0].copy(points = 2.5)))
+        val env = PackageCrypto.seal(content, "exam-1", "T", 1L, 2L, token, saltB64, iterations)
+        assertEquals(2.5, PackageCrypto.open(env, token).questions[0].points, 0.0)
+        val q = Json.decodeFromString<Question>("""{"id":"q","no":1,"text":"t","type":"SINGLE","options":[]}""")
+        assertEquals(1.0, q.points, 0.0)
     }
 
     @Serializable

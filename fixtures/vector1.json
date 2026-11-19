@@ -7,8 +7,8 @@
         "endAt": 1700003600000,
         "saltB64": "c2FsdHNhbHRzYWx0MTIzNA==",
         "iterations": 120000,
-        "ivB64": "P7C+JVUwokzpiW7+",
-        "cipherB64": "7p8zKCWSJh0wZL2zVaH0n0bgvh2f5mEe4DnizisJxfE8H0ap47RmebXDndXgACmgTjhcvAkkaUSSRkDx0FlYqmptp59sY9lHdmC/29bUKRuTBgvFd05liEorQfyiuJOG1tsNhvyDap9qF10XioJJTy1EcsIPDe9ZalVTDnGR2iq7Z8MsCikikY4wprXUTa8Pd7JkyYZk9iJb984kmHDZ8kGDiiT4L3Qz9ZJYSU1l1N9Z5UpSNwyaFbl1O+ueCMLocjbGwldbIlL0D42BSQCPhPznjP0pJoR0ywrNJE16Hv18nSlmxPPnTI9j0WpaB1LsuZNPInplpwT/d14t/K/HFF1omHN9+MHVIBQTBM380D+8vyXxl8qh6GQUPombnbOGQxiv9J4zA1H4ZAp2YnPXMv9dAb30thD/mcX7TIPDrkiwsW+S+kWibcvfVvk4znCG8+rqGrt0fQmA8W++SJOcRki238hDjtfHpYEuYD9rQqehUneymEVrDI3GWK/FAGYKacZhvkzMtnDI3xra/uMpavyBwFkgtYceWy0Kx4IQ7TApEKpp6FVdd3A6rvSiCAyXicYvWJOjsZGJUEcjoeqKMP6orMWSVpV4iUqhYTCZ"
+        "ivB64": "5CVaPijcw0f+yiem",
+        "cipherB64": "oICvtkTSGWChXUE7h/2+XTNLKNDzE5UoIhwewuAU++V2ceWZANdPrcWpX2ZRA14DpznY371Mz7DmqZzlrR+Pfq9UknahY29LtnIES5BPUu2ejLDTPEyi9v0gFN3vq8M8hD7y3hTDynR69qVel0ORvdYIQJTl05O5KgPSSjExUwGutgSf9mZwQrg63TBmQc5X4U+5vezdwzwbP/mquEGP4VJJ7bjSxnfFcWcFlLE1X7duIdnJH/73ccyPlgN67ifHHiT6YPSRjCQwvFnsGFj9Sql/l740vkz6L2oaIGCNqgtkU6BkUC7xjleKRzScJD3+B1JjswX2WDX9q/fohuTGz3JR936fcO9PwruXSI7LGAwT5QAF48OxcyXKBZPfTt6Wk7JA2M0g66KT98O7AIOVNxuse+0ERLZxZKYy9l/whD2YHvsMVR0jcrNOaSJ5u/qzECrYG3yjUwncy9WoeMTE5FVhEkdvSXPjscEYcx4QrNG+3oBEidbD2a6DNrXWWgVZQqZiJ6Ih49AWelfXWCRMsVFDVjRTAfUchzwpZvT4w+pE/i3hE/+LkprVsxXMIYgxowJHKnNmcCm9cZ69MDl97TSMgan4TGgcH9kL+HloAWmkm/qyUKrnHsCdbg=="
     },
     "content": {
         "questions": [
@@ -26,7 +26,8 @@
                         "id": "b",
                         "text": "Bandung"
                     }
-                ]
+                ],
+                "points": 2.5
             },
             {
                 "id": "q2",
