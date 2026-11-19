@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [
@@ -13,7 +15,7 @@ import androidx.room.RoomDatabase
         OutboxEntity::class,
         ExamSessionEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -24,6 +26,13 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun examSessionDao(): ExamSessionDao
 
     companion object {
+        // ponytail: pre-upgrade rows get nisn '' (payload has no nisn); the worker sends them with the active session, acceptable for one-off legacy rows
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE sync_outbox ADD COLUMN nisn TEXT NOT NULL DEFAULT ''")
+            }
+        }
+
         private const val DB_NAME = "man3_ujian.db"
 
         fun build(context: Context): AppDatabase {
@@ -31,7 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
                 context.applicationContext,
                 AppDatabase::class.java,
                 DB_NAME
-            ).build()
+            ).addMigrations(MIGRATION_1_2).build()
         }
 
         fun inMemory(context: Context): AppDatabase {

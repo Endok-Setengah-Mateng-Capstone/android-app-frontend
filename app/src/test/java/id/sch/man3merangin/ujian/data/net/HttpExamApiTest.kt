@@ -34,11 +34,11 @@ class HttpExamApiTest {
 
     @Test fun syncSendsBearerAndBatch() = runBlocking {
         server.enqueue(MockResponse().setBody("""{"acceptedIds":["a"]}"""))
-        val r = api.sync(listOf(SyncItem("a", "ANSWER", "{}")))
+        val r = api.sync(listOf(SyncItem("a", "ANSWER", "{}")), "owner-tok")
         assertEquals(listOf("a"), r.acceptedIds)
         val req = server.takeRequest()
         assertEquals("/sync", req.path)
-        assertEquals("Bearer sess-1", req.getHeader("Authorization"))
+        assertEquals("Bearer owner-tok", req.getHeader("Authorization"))
         assertEquals("""{"items":[{"id":"a","kind":"ANSWER","payloadJson":"{}"}]}""", req.body.readUtf8())
     }
 
@@ -55,7 +55,7 @@ class HttpExamApiTest {
 
     @Test fun status409ThrowsDeviceMismatch() = runBlocking {
         server.enqueue(MockResponse().setResponseCode(409))
-        try { api.sync(emptyList()); fail() } catch (_: DeviceMismatchException) {}
+        try { api.sync(emptyList(), "t"); fail() } catch (_: DeviceMismatchException) {}
     }
 
     @Test fun listExamsParsesContractShape() = runBlocking {

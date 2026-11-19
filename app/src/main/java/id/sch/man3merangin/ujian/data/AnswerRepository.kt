@@ -59,7 +59,8 @@ class AnswerRepository(
             id = uuid(),
             kind = "ANSWER",
             payloadJson = json.encodeToString(payload),
-            createdAt = now
+            createdAt = now,
+            nisn = nisn
         )
 
         // withTransaction = suspend-friendly runInTransaction: one atomic Room transaction
@@ -91,7 +92,8 @@ class AnswerRepository(
             id = uuid(),
             kind = "SUBMIT",
             payloadJson = json.encodeToString(payload),
-            createdAt = now
+            createdAt = now,
+            nisn = nisn
         )
         db.outboxDao().insert(outboxEntity)
     }

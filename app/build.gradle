@@ -42,6 +42,8 @@ android {
         compose true
         buildConfig true
     }
+    // ponytail: schemas ride in the debug APK so Robolectric MigrationTestHelper finds them; move to androidTest/real instrumented tests if APK size matters
+    sourceSets.debug.assets.srcDir("$projectDir/schemas")
     testOptions {
         unitTests {
             includeAndroidResources = true
@@ -79,6 +81,7 @@ dependencies {
     testImplementation libs.robolectric
     testImplementation libs.okhttp.mockwebserver
     testImplementation libs.androidx.work.testing
+    testImplementation libs.androidx.room.testing
     testImplementation libs.androidx.compose.ui.test.junit4
 
     debugImplementation libs.androidx.compose.ui.tooling

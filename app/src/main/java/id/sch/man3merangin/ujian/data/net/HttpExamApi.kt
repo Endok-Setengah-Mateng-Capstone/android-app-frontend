@@ -25,12 +25,10 @@ class HttpExamApi(
     private val json = Json { ignoreUnknownKeys = true }
     private val jsonMediaType = "application/json; charset=utf-8".toMediaType()
 
-    private fun requestBuilder(path: String): Request.Builder {
+    private fun requestBuilder(path: String, token: String? = sessionProvider()): Request.Builder {
         val url = if (baseUrl.endsWith("/")) "$baseUrl$path" else "$baseUrl/$path"
         val builder = Request.Builder().url(url)
-        sessionProvider()?.let { token ->
-            builder.addHeader("Authorization", "Bearer $token")
-        }
+        token?.let { builder.addHeader("Authorization", "Bearer $it") }
         builder.addHeader("X-Device-Id", deviceIdProvider())
         return builder
     }
@@ -82,9 +80,9 @@ class HttpExamApi(
     @Serializable
     private data class SyncBatchRequest(val items: List<SyncItem>)
 
-    override suspend fun sync(batch: List<SyncItem>): SyncResult {
+    override suspend fun sync(batch: List<SyncItem>, sessionToken: String): SyncResult {
         val reqBody = json.encodeToString(SyncBatchRequest(batch)).toRequestBody(jsonMediaType)
-        val request = requestBuilder("sync").post(reqBody).build()
+        val request = requestBuilder("sync", sessionToken).post(reqBody).build()
         return call(request) { response ->
             val body = handleResponse(response)
             json.decodeFromString<SyncResult>(body)

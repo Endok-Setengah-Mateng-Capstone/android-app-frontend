@@ -26,6 +26,12 @@ interface OutboxDao {
     @Query("SELECT * FROM sync_outbox ORDER BY createdAt ASC LIMIT :limit")
     suspend fun pending(limit: Int): List<OutboxEntity>
 
+    @Query("SELECT * FROM sync_outbox WHERE nisn = :nisn ORDER BY createdAt ASC LIMIT :limit")
+    suspend fun pending(nisn: String, limit: Int): List<OutboxEntity>
+
+    @Query("SELECT DISTINCT nisn FROM sync_outbox")
+    suspend fun pendingNisns(): List<String>
+
     @Query("DELETE FROM sync_outbox WHERE id IN (:ids)")
     suspend fun delete(ids: List<String>)
 

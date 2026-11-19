@@ -29,41 +29,33 @@ class SyncWorker(
         val db = app.database
         val api = app.api
 
-        val pendingList = db.outboxDao().pending(50)
-        if (pendingList.isEmpty()) {
-            return Result.success()
-        }
-
-        val syncBatch = pendingList.map {
-            SyncItem(
-                id = it.id,
-                kind = it.kind,
-                payloadJson = it.payloadJson
-            )
-        }
-
-        return try {
-            val response = api.sync(syncBatch)
-            if (response.acceptedIds.isNotEmpty()) {
-                db.outboxDao().delete(response.acceptedIds)
+        val session = app.session
+        var result: Result = Result.success()
+        for (owner in db.outboxDao().pendingNisns()) {
+            // ponytail: '' = rows from before migration 1->2, sent with the active session
+            val token = (if (owner.isEmpty()) session.token else session.tokenFor(owner)) ?: continue
+            try {
+                val rows = db.outboxDao().pending(owner, 50)
+                val accepted = api.sync(rows.map { SyncItem(it.id, it.kind, it.payloadJson) }, token).acceptedIds
+                if (accepted.isNotEmpty()) db.outboxDao().delete(accepted)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: IOException) {
+                result = Result.retry()
+            } catch (_: DeviceMismatchException) {
+                // TODO(Task 10c): surface "perangkat belum diizinkan" in UI; rows are kept for later
+            } catch (e: ApiException) {
+                if (e.code == 401) session.forgetToken(owner) // rows kept; owner waits for a new login
+                if (e.code == 401 || e.code == 403 || e.code in 500..599) result = Result.retry()
+                else if (result != Result.retry()) result = Result.failure()
+            } catch (_: Exception) {
+                result = Result.retry()
             }
-            Result.success()
-        } catch (e: CancellationException) {
-            throw e
-        } catch (_: IOException) {
-            Result.retry()
-        } catch (_: DeviceMismatchException) {
-            // TODO(Task 10c): surface "perangkat belum diizinkan" in UI; rows are kept for later
-            Result.success()
-        } catch (e: ApiException) {
-            if (e.code == 401 || e.code == 403 || e.code in 500..599) {
-                Result.retry()
-            } else {
-                Result.failure()
-            }
-        } catch (_: Exception) {
-            Result.retry()
         }
+        // drop tokens of non-active students whose queue is empty
+        val waiting = db.outboxDao().pendingNisns().toSet()
+        session.storedNisns().filter { it != session.nisn && it !in waiting }.forEach(session::forgetToken)
+        return result
     }
 }
 

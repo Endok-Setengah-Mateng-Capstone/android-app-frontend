@@ -42,7 +42,8 @@ data class OutboxEntity(
     val kind: String, // ANSWER, VIOLATION, SUBMIT
     val payloadJson: String,
     val createdAt: Long,
-    val attempts: Int = 0
+    val attempts: Int = 0,
+    val nisn: String = "" // owner of the row; '' only for rows created before migration 1->2
 )
 
 @Entity(

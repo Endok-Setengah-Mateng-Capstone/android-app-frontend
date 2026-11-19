@@ -32,13 +32,14 @@ class SyncWorkerTest {
     @Before fun setUp() {
         db = AppDatabase.inMemory(app)
         fake = FakeExamApi()
+        app.session.rememberToken("A", "tokA")
         app.database = db
         app.api = fake
     }
     @After fun tearDown() { db.close() }
 
     private fun seed(n: Int) = runBlocking {
-        repeat(n) { db.outboxDao().insert(OutboxEntity("id$it", "ANSWER", "{}", it.toLong())) }
+        repeat(n) { db.outboxDao().insert(OutboxEntity("id$it", "ANSWER", "{}", it.toLong(), 0, "A")) }
     }
     private fun run() = runBlocking { TestListenableWorkerBuilder<SyncWorker>(app).build().doWork() }
     private fun ids() = runBlocking { db.outboxDao().pending(100).map { it.id } }
@@ -46,7 +47,7 @@ class SyncWorkerTest {
     @Test fun deletesOnlyAcceptedIds() {
         seed(3)
         app.api = object : ExamApi by fake {
-            override suspend fun sync(batch: List<SyncItem>) = SyncResult(listOf("id0", "id2"))
+            override suspend fun sync(batch: List<SyncItem>, sessionToken: String) = SyncResult(listOf("id0", "id2"))
         }
         assertEquals(Result.success(), run())
         assertEquals(listOf("id1"), ids())
@@ -55,7 +56,7 @@ class SyncWorkerTest {
     @Test fun ioExceptionReturnsRetryAndKeepsRows() {
         seed(2)
         app.api = object : ExamApi by fake {
-            override suspend fun sync(batch: List<SyncItem>): SyncResult = throw IOException("down")
+            override suspend fun sync(batch: List<SyncItem>, sessionToken: String): SyncResult = throw IOException("down")
         }
         assertEquals(Result.retry(), run())
         assertEquals(listOf("id0", "id1"), ids())
@@ -67,7 +68,7 @@ class SyncWorkerTest {
         var fail = true
         app.api = object : ExamApi by fake {
             // server accepted, client timed out
-            override suspend fun sync(batch: List<SyncItem>): SyncResult {
+            override suspend fun sync(batch: List<SyncItem>, sessionToken: String): SyncResult {
                 sent += batch.map { it.id }
                 if (fail) throw IOException("timeout")
                 return SyncResult(batch.map { it.id })
@@ -88,9 +89,10 @@ class SyncWorkerTest {
     @Test fun unauthorizedReturnsRetryAndKeepsRows() {
         for (code in listOf(401, 403)) {
             db.clearAllTables()
+            app.session.rememberToken("A", "tokA")
             seed(2)
             app.api = object : ExamApi by fake {
-                override suspend fun sync(batch: List<SyncItem>): SyncResult = throw ApiException(code)
+                override suspend fun sync(batch: List<SyncItem>, sessionToken: String): SyncResult = throw ApiException(code)
             }
             assertEquals(Result.retry(), run())
             assertEquals(listOf("id0", "id1"), ids())

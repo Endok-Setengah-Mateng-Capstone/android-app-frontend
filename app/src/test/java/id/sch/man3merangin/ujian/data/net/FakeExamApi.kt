@@ -93,7 +93,7 @@ class FakeExamApi : ExamApi {
 
     override suspend fun downloadPackage(examId: String): Envelope = sampleEnvelope
 
-    override suspend fun sync(batch: List<SyncItem>): SyncResult {
+    override suspend fun sync(batch: List<SyncItem>, sessionToken: String): SyncResult {
         if (shouldThrow409) throw DeviceMismatchException()
         if (shouldFailSync) throw ApiException(500, "Server error")
         receivedSyncItems.addAll(batch)

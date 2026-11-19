@@ -51,7 +51,8 @@ class ViolationRepository(
             id = violationId, // server uses the item id as the violation PK
             kind = "VIOLATION",
             payloadJson = json.encodeToString(payload),
-            createdAt = d.startedAt
+            createdAt = d.startedAt,
+            nisn = nisn
         )
 
         db.withTransaction {

@@ -51,7 +51,7 @@ interface ExamApi {
     suspend fun login(nisn: String, password: String): LoginResult
     suspend fun listExams(): List<ExamSummary>
     suspend fun downloadPackage(examId: String): Envelope
-    suspend fun sync(batch: List<SyncItem>): SyncResult
+    suspend fun sync(batch: List<SyncItem>, sessionToken: String): SyncResult
     suspend fun serverTime(): Long
     suspend fun ready(examId: String, version: Int)
     suspend fun heartbeat(examId: String, answeredCount: Int): Long
