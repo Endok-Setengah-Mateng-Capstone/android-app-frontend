@@ -80,4 +80,41 @@ class ViolationTrackerTest {
         assertFalse(ViolationCategory.LOW_BATTERY.isViolation)
         assertFalse(ViolationCategory.CLOCK_UNVERIFIED.isViolation)
     }
+
+    @Test
+    fun PipEntersAndExitsEmitsFloatingPip() {
+        val tracker = ViolationTracker()
+        val entered = tracker.onSignal(Signal.Pip(true), 1000L)
+        assertEquals(listOf(ViolationCategory.FLOATING_PIP), entered.map { it.category })
+        assertEquals(0, tracker.onSignal(Signal.Pip(false), 3000L).size)
+    }
+
+    @Test
+    fun ringingOlderThanFiveSecondsDoesNotReclassify() {
+        val tracker = ViolationTracker()
+        tracker.onSignal(Signal.PhoneRinging, 1000L)
+        tracker.onSignal(Signal.UserLeaveHint, 7000L)
+        val detected = tracker.onSignal(Signal.Started, 9000L)
+        assertEquals(ViolationCategory.APP_EXIT, detected.single().category)
+    }
+
+    @Test
+    fun doubleStopDoesNotOpenTwoSpans() {
+        val tracker = ViolationTracker()
+        tracker.onSignal(Signal.UserLeaveHint, 1000L)
+        tracker.onSignal(Signal.Stopped, 1100L)
+        val detected = tracker.onSignal(Signal.Started, 4500L)
+        assertEquals(1, detected.size)
+        assertEquals(1000L, detected[0].startedAt)
+        assertEquals(3500L, detected[0].durationMs)
+        assertEquals(0, tracker.onSignal(Signal.Started, 5000L).size)
+    }
+
+    @Test
+    fun clipboardIsInstantCopyPaste() {
+        val d = ViolationTracker().onSignal(Signal.ClipboardChanged, 1234L).single()
+        assertEquals(ViolationCategory.COPY_PASTE, d.category)
+        assertEquals(1234L, d.startedAt)
+        assertEquals(0L, d.durationMs)
+    }
 }
