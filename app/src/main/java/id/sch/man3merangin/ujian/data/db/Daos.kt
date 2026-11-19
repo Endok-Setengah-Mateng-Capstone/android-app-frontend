@@ -50,11 +50,14 @@ interface ExamPackageDao {
     @Query("SELECT * FROM exam_packages WHERE examId = :examId LIMIT 1")
     suspend fun getById(examId: String): ExamPackageEntity?
 
-    @Query("SELECT * FROM exam_packages ORDER BY startAt DESC")
+    @Query("SELECT * FROM exam_packages WHERE published = 1 ORDER BY startAt DESC")
     fun getAllFlow(): Flow<List<ExamPackageEntity>>
 
     @Query("SELECT * FROM exam_packages ORDER BY startAt DESC")
     suspend fun getAll(): List<ExamPackageEntity>
+
+    @Query("UPDATE exam_packages SET published = (examId IN (:ids))")
+    suspend fun setPublished(ids: List<String>)
 
     @Query("DELETE FROM exam_packages WHERE examId = :examId")
     suspend fun delete(examId: String)

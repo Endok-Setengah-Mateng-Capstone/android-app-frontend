@@ -31,4 +31,13 @@ class MigrationTest {
             assertEquals(2, it.getInt(2))
         }
     }
+
+    @Test fun migration2To3KeepsPackagesPublished() {
+        helper.createDatabase("mig2.db", 2).apply {
+            execSQL("INSERT INTO exam_packages (examId, title, startAt, endAt, envelopeJson, version) VALUES ('e','t',1,2,'{}',1)")
+            close()
+        }
+        val db = helper.runMigrationsAndValidate("mig2.db", 3, true, AppDatabase.MIGRATION_2_3)
+        db.query("SELECT published FROM exam_packages").use { it.moveToFirst(); assertEquals(1, it.getInt(0)) }
+    }
 }

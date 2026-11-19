@@ -15,7 +15,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         OutboxEntity::class,
         ExamSessionEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -33,6 +33,12 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE exam_packages ADD COLUMN published INTEGER NOT NULL DEFAULT 1")
+            }
+        }
+
         private const val DB_NAME = "man3_ujian.db"
 
         fun build(context: Context): AppDatabase {
@@ -40,7 +46,7 @@ abstract class AppDatabase : RoomDatabase() {
                 context.applicationContext,
                 AppDatabase::class.java,
                 DB_NAME
-            ).addMigrations(MIGRATION_1_2).build()
+            ).addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
         }
 
         fun inMemory(context: Context): AppDatabase {

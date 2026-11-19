@@ -31,6 +31,7 @@ class ExamRepository(
             clock.sync(serverTime)
 
             val remoteExams = api.listExams()
+            db.examPackageDao().setPublished(remoteExams.map { it.examId })
             for (exam in remoteExams) {
                 val local = db.examPackageDao().getById(exam.examId)
                 if (local == null || exam.version > local.version) {

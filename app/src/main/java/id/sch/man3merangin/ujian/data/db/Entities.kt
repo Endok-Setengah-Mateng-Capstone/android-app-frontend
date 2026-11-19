@@ -10,7 +10,8 @@ data class ExamPackageEntity(
     val startAt: Long,
     val endAt: Long,
     val envelopeJson: String,
-    val version: Int
+    val version: Int,
+    val published: Boolean = true // false once the exam disappears from GET /exams; package kept for pending answers
 )
 
 @Entity(
