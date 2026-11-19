@@ -14,7 +14,7 @@ import androidx.room.RoomDatabase
         ExamSessionEntity::class
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun answerDao(): AnswerDao
@@ -31,9 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
                 context.applicationContext,
                 AppDatabase::class.java,
                 DB_NAME
-            ).fallbackToDestructiveMigration()
-             .allowMainThreadQueries()
-             .build()
+            ).build()
         }
 
         fun inMemory(context: Context): AppDatabase {
