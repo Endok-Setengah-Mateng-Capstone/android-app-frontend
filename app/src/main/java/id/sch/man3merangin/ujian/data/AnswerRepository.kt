@@ -16,7 +16,6 @@ class ExamEndedException : Exception("Waktu ujian telah berakhir")
 @Serializable
 data class AnswerPayload(
     val examId: String,
-    val nisn: String,
     val questionId: String,
     val selected: List<String>,
     val answeredAt: Long
@@ -25,7 +24,6 @@ data class AnswerPayload(
 @Serializable
 data class SubmitPayload(
     val examId: String,
-    val nisn: String,
     val submittedAt: Long
 )
 
@@ -51,7 +49,6 @@ class AnswerRepository(
 
         val payload = AnswerPayload(
             examId = examId,
-            nisn = nisn,
             questionId = questionId,
             selected = sortedList,
             answeredAt = now
@@ -64,6 +61,7 @@ class AnswerRepository(
             createdAt = now
         )
 
+        // withTransaction = suspend-friendly runInTransaction: one atomic Room transaction
         db.withTransaction {
             db.answerDao().upsert(answerEntity)
             db.outboxDao().insert(outboxEntity)
@@ -86,7 +84,6 @@ class AnswerRepository(
         val now = clock()
         val payload = SubmitPayload(
             examId = examId,
-            nisn = nisn,
             submittedAt = now
         )
         val outboxEntity = OutboxEntity(
